@@ -12,75 +12,95 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
 
-def get_fitness(self):
-    """A function to calculate the number of dead queens and the total number of queens in the solution
-    Returns:
-        tuple: (number of dead queens, total number of queens in the board)
-    """
-    nr_queens = 0
-    nr_dead = 0
+# def get_fitness(self):
+#     """A function to calculate the number of dead queens and the total number of queens in the solution
+#     Returns:
+#         tuple: (number of dead queens, total number of queens in the board)
+#     """
+#     nr_queens = 0
+#     nr_dead = 0
 
-    # transform into matrix (porque não tou a ver como se faz com os bits todos seguidos na parte de ver as rainhas mortas):
-    n = int(math.sqrt(len(self.representation)))
-    rep = [[self.representation[i*n+j] for j in range(n)] for i in range(n)] # [0,0,1,0] --> [[0,0],[1,0]]
+#     # transform into matrix (porque não tou a ver como se faz com os bits todos seguidos na parte de ver as rainhas mortas):
+#     n = int(math.sqrt(len(self.representation)))
+#     rep = [[self.representation[i*n+j] for j in range(n)] for i in range(n)] # [0,0,1,0] --> [[0,0],[1,0]]
     
-    # print(rep)
+#     # print(rep)
 
-    for line in range(n):
-        for col in range(n):
+#     for line in range(n):
+#         for col in range(n):
                 
-            dead = False # if our current queen has threats, dead will become true and count one in the end for the nr of dead queens count
+#             dead = False # if our current queen has threats, dead will become true and count one in the end for the nr of dead queens count
 
-            if rep[line][col] == 1:
+#             if rep[line][col] == 1:
 
-                nr_queens += 1
+#                 nr_queens += 1
 
-                # let's search for this point's diagonal
-                diagonal_indexes = []
-                for i in range(1, n):
+#                 # let's search for this point's diagonal
+#                 diagonal_indexes = []
+#                 for i in range(1, n):
                     
-                    if line >= i and col >= i:
-                        diagonal_indexes.append((line-i,col-i))
+#                     if line >= i and col >= i:
+#                         diagonal_indexes.append((line-i,col-i))
 
-                    if line >= i and col+i < n:
-                        diagonal_indexes.append((line-i,col+i)) 
+#                     if line >= i and col+i < n:
+#                         diagonal_indexes.append((line-i,col+i)) 
                         
-                    if line+i < n and col+i < n:
-                        diagonal_indexes.append((line+i, col+i))
+#                     if line+i < n and col+i < n:
+#                         diagonal_indexes.append((line+i, col+i))
 
-                    if line+i < n and col >= i:
-                        diagonal_indexes.append((line+i, col-i))
+#                     if line+i < n and col >= i:
+#                         diagonal_indexes.append((line+i, col-i))
 
-                diagonal = [rep[i[0]][i[1]] for i in diagonal_indexes]
+#                 diagonal = [rep[i[0]][i[1]] for i in diagonal_indexes]
 
-                # let's search the queens line for other queens
-                if sum(rep[line]) > 1: #if the sum of the line is bigger than 1, it contains more than one queen
-                    dead = True
+#                 # let's search the queens line for other queens
+#                 if sum(rep[line]) > 1: #if the sum of the line is bigger than 1, it contains more than one queen
+#                     dead = True
                 
-                # let's search the queens column for other queens
-                elif sum([rep[l][col] for l in range(n)]) > 1: #this will see each line for the same column col and do the same logic as above
-                    dead = True   
+#                 # let's search the queens column for other queens
+#                 elif sum([rep[l][col] for l in range(n)]) > 1: #this will see each line for the same column col and do the same logic as above
+#                     dead = True   
                 
-                # the way it searches for the diagonal excludes the starting point itself so if the sum of the diagonal list is bigger than one 
-                # that indicates theres at least one queen diagonally positioned from our position
-                elif sum(diagonal) > 0:
-                    dead = True
+#                 # the way it searches for the diagonal excludes the starting point itself so if the sum of the diagonal list is bigger than one 
+#                 # that indicates theres at least one queen diagonally positioned from our position
+#                 elif sum(diagonal) > 0:
+#                     dead = True
                 
-            if dead:
-                nr_dead +=1
+#             if dead:
+#                 nr_dead +=1
 
-    fitness = 5*nr_dead - 2.5*nr_queens
+#     fitness = 5*nr_dead - 2.5*nr_queens
 
-    if nr_dead == nr_queens:
-        fitness *= n
+#     if nr_dead == nr_queens:
+#         fitness *= n
+#     return fitness
+
+
+
+
+def get_fitness_regression(self):
+
+    fitness = 5*self.deaths - 2.5*self.queens
+
+    if self.deaths == self.queens:
+        fitness *= self.n
     return fitness
 
-Individual.get_fitness = get_fitness
+def get_fitness_tuple(self):
+
+     return (self.queens, self.deaths)
+
+
+
+
+
+Individual.get_fitness = get_fitness_regression
+Individual.get_deaths = get_deaths
 
 print(Individual([1,1,1,0,
                    0,0,0,1,
                    0,1,0,0,
-                   0,1,0,1]).queens)
+                   0,1,0,1]).deaths)
 
 
 # def run_experiment(n, iterations, pop_size, crossover_prob, mutation_prob, selection, mutation, crossover):

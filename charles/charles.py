@@ -19,17 +19,20 @@ class Individual:
                 self.representation = sample(valid_set, size)
         else:
             self.representation = representation
-        self.fitness = self.get_fitness()
+        
+
+        self.n = int(math.sqrt(len(self.representation)))
 
         self.queens = representation.count(1)
 
         self.deaths = self.get_deaths()
-    
+
+        self.fitness = self.get_fitness()
     def get_deaths(self):
         nr_dead = 0
 
     # transform into matrix (porque não tou a ver como se faz com os bits todos seguidos na parte de ver as rainhas mortas):
-        n = int(math.sqrt(len(self.representation)))
+        n = self.n
         rep = [[self.representation[i*n+j] for j in range(n)] for i in range(n)] # [0,0,1,0] --> [[0,0],[1,0]]
     
     # print(rep)
@@ -76,7 +79,6 @@ class Individual:
                     nr_dead +=1
         
         return nr_dead
-            
 
     def get_fitness(self):
         raise Exception("You need to monkey patch the fitness path.")
