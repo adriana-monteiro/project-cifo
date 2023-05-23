@@ -77,27 +77,29 @@ def get_fitness(self):
 
 Individual.get_fitness = get_fitness
 
-print(Individual([1,0,1,0,
-                  0,0,0,0,
-                  0,0,0,0,
-                  1,1,0,0]).fitness)
+# print(Individual([1,0,1,0,
+#                   0,0,0,0,
+#                   0,0,0,0,
+#                   1,1,0,0]).fitness)
 
 
 def run_experiment(n, iterations, pop_size, crossover_prob, mutation_prob, selection, mutation, crossover):
 
-    best_indvs = []
+    best_indvs_fit = []
     for _ in range(iterations):
 
         pop = None
 
         pop = Population(size = pop_size, optim="min", sol_size=n*n, valid_set=[0, 1], replacement=True)
 
-        pop.evolve(gens=200, xo_prob=crossover_prob, mut_prob=mutation_prob, select=selection,
+        pop.evolve(gens=100, xo_prob=crossover_prob, mut_prob=mutation_prob, select=selection,
                 mutate=mutation, crossover=crossover,
                 elitism=True)
         
-        print(pop.bestindvs[-1])
-        print(pop.bestindvs[-1].fitness)
+        #print(pop.bestindvs[-1])
+        best_indvs_fit = [i.fitness for i in pop.bestindvs]
+
+        print(best_indvs_fit)
 
       #  print('individuals', pop.individuals)
 
@@ -115,8 +117,8 @@ def run_experiment(n, iterations, pop_size, crossover_prob, mutation_prob, selec
     #### como é que vamos buscar o fitness e a solução para guardar? 
 
 
-n = 7  
-exp1 = run_experiment(n = n,iterations = 1, pop_size = 30, crossover_prob=0.9, mutation_prob=0.3, 
+n = 10
+exp1 = run_experiment(n = n,iterations = 30, pop_size = 30, crossover_prob=0.9, mutation_prob=0.9, 
                      selection=tournament_sel, mutation = binary_mutation, crossover=single_point_co)
 
 # exp2 = run_experiment(n = n,iterations = 30, pop_size = 30, crossover_prob=0.9, mutation_prob=0.9, 
