@@ -113,5 +113,3 @@ exp2 = run_experiment(n = n,iterations = 30, pop_size = 30, crossover_prob=0.9, 
 sns.lineplot(exp1)
 sns.lineplot(exp2)
 plt.show()
-
-#jaiorjaioja
