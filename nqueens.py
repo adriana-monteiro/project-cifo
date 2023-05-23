@@ -1,7 +1,6 @@
 from charles.charles import Population, Individual
 from charles.search import hill_climb, sim_annealing
 from copy import deepcopy
-from data.ks_data import weights, values, capacity
 from charles.selection import fps, tournament_sel
 from charles.mutation import binary_mutation
 from charles.crossover import single_point_co
@@ -11,6 +10,7 @@ from operator import attrgetter
 import math
 import matplotlib.pyplot as plt
 import seaborn as sns
+import pandas as pd
 
 def get_fitness(self):
     """A function to calculate the number of dead queens and the total number of queens in the solution
@@ -77,41 +77,51 @@ def get_fitness(self):
 
 Individual.get_fitness = get_fitness
 
-# print(Individual([1,0,1,0,
-#                   0,0,0,0,
-#                   0,0,0,0,
-#                   1,1,0,0]).get_fitness)
+print(Individual([1,0,1,0,
+                  0,0,0,0,
+                  0,0,0,0,
+                  1,1,0,0]).fitness)
 
 
 def run_experiment(n, iterations, pop_size, crossover_prob, mutation_prob, selection, mutation, crossover):
-    
-    best_indiv_fitness = []
-    
+
+    best_indvs = []
     for _ in range(iterations):
+
+        pop = None
+
         pop = Population(size = pop_size, optim="min", sol_size=n*n, valid_set=[0, 1], replacement=True)
 
-        best_indiv_fitness.append(pop.evolve(gens=200, xo_prob=crossover_prob, mut_prob=mutation_prob, select=selection,
+        pop.evolve(gens=200, xo_prob=crossover_prob, mut_prob=mutation_prob, select=selection,
                 mutate=mutation, crossover=crossover,
-                elitism=True).fitness)
+                elitism=True)
+        
+        print(pop.bestindvs[-1])
+        print(pop.bestindvs[-1].fitness)
+
+      #  print('individuals', pop.individuals)
+
+        # best_indiv_fitness.append((pop.evolve(gens=200, xo_prob=crossover_prob, mut_prob=mutation_prob, select=selection,
+        #         mutate=mutation, crossover=crossover,
+        #         elitism=True)).fitness)
         
         print("Iteration done")
 
+        #avg_fitness_df = pd.Dataframe()
+
     print('Experiment Finalized')
 
-    return best_indiv_fitness
+    #return best_indiv_fitness
     #### como é que vamos buscar o fitness e a solução para guardar? 
 
 
-n = 8  
-exp1 = run_experiment(n = n,iterations = 30, pop_size = 30, crossover_prob=0.9, mutation_prob=0.2, 
+n = 7  
+exp1 = run_experiment(n = n,iterations = 1, pop_size = 30, crossover_prob=0.9, mutation_prob=0.3, 
                      selection=tournament_sel, mutation = binary_mutation, crossover=single_point_co)
 
-exp2 = run_experiment(n = n,iterations = 30, pop_size = 30, crossover_prob=0.9, mutation_prob=0.9, 
-                     selection=tournament_sel, mutation = binary_mutation, crossover=single_point_co)
+# exp2 = run_experiment(n = n,iterations = 30, pop_size = 30, crossover_prob=0.9, mutation_prob=0.9, 
+#                      selection=tournament_sel, mutation = binary_mutation, crossover=single_point_co
 
-
-sns.lineplot(exp1)
-sns.lineplot(exp2)
-plt.show()
-
-## comentario
+# sns.lineplot(exp1)
+# sns.lineplot(exp2)
+# plt.show()
