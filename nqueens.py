@@ -94,53 +94,53 @@ def get_fitness_tuple(self):
 
 Individual.get_fitness = get_fitness
 
-# print(Individual([1,0,1,0,
-#                   0,0,0,0,
-#                   0,0,0,0,
-#                   1,1,0,0]).fitness)
+print(Individual([1,1,1,0,
+                   0,0,0,1,
+                   0,1,0,0,
+                   0,1,0,1]).queens)
 
 
-def run_experiment(n, iterations, pop_size, crossover_prob, mutation_prob, selection, mutation, crossover):
+# def run_experiment(n, iterations, pop_size, crossover_prob, mutation_prob, selection, mutation, crossover):
 
-    best_indvs_fit = []
-    for _ in range(iterations):
+#     best_indvs_fit = []
+#     for _ in range(iterations):
 
-        pop = None
+#         pop = None
 
-        pop = Population(size = pop_size, optim="min", sol_size=n*n, valid_set=[0, 1], replacement=True)
+#         pop = Population(size = pop_size, optim="min", sol_size=n*n, valid_set=[0, 1], replacement=True)
 
-        pop.evolve(gens=100, xo_prob=crossover_prob, mut_prob=mutation_prob, select=selection,
-                mutate=mutation, crossover=crossover,
-                elitism=True)
+#         pop.evolve(gens=100, xo_prob=crossover_prob, mut_prob=mutation_prob, select=selection,
+#                 mutate=mutation, crossover=crossover,
+#                 elitism=True)
         
-        #print(pop.bestindvs[-1])
-        best_indvs_fit = [i.fitness for i in pop.bestindvs]
+#         #print(pop.bestindvs[-1])
+#         best_indvs_fit = [i.fitness for i in pop.bestindvs]
 
-        print(best_indvs_fit)
+#         print(best_indvs_fit)
 
-      #  print('individuals', pop.individuals)
+#       #  print('individuals', pop.individuals)
 
-        # best_indiv_fitness.append((pop.evolve(gens=200, xo_prob=crossover_prob, mut_prob=mutation_prob, select=selection,
-        #         mutate=mutation, crossover=crossover,
-        #         elitism=True)).fitness)
+#         # best_indiv_fitness.append((pop.evolve(gens=200, xo_prob=crossover_prob, mut_prob=mutation_prob, select=selection,
+#         #         mutate=mutation, crossover=crossover,
+#         #         elitism=True)).fitness)
         
-        print("Iteration done")
+#         print("Iteration done")
 
-        #avg_fitness_df = pd.Dataframe()
+#         #avg_fitness_df = pd.Dataframe()
 
-    print('Experiment Finalized')
+#     print('Experiment Finalized')
 
-    #return best_indiv_fitness
-    #### como é que vamos buscar o fitness e a solução para guardar? 
+#     #return best_indiv_fitness
+#     #### como é que vamos buscar o fitness e a solução para guardar? 
 
 
-n = 10
-exp1 = run_experiment(n = n,iterations = 30, pop_size = 30, crossover_prob=0.9, mutation_prob=0.9, 
-                     selection=tournament_sel, mutation = binary_mutation, crossover=single_point_co)
+# # n = 10
+# # # exp1 = run_experiment(n = n,iterations = 30, pop_size = 30, crossover_prob=0.9, mutation_prob=0.9, 
+#                      selection=tournament_sel, mutation = binary_mutation, crossover=single_point_co)
 
-# exp2 = run_experiment(n = n,iterations = 30, pop_size = 30, crossover_prob=0.9, mutation_prob=0.9, 
-#                      selection=tournament_sel, mutation = binary_mutation, crossover=single_point_co
+# # exp2 = run_experiment(n = n,iterations = 30, pop_size = 30, crossover_prob=0.9, mutation_prob=0.9, 
+# #                      selection=tournament_sel, mutation = binary_mutation, crossover=single_point_co
 
-# sns.lineplot(exp1)
-# sns.lineplot(exp2)
-# plt.show()
+# # sns.lineplot(exp1)
+# # sns.lineplot(exp2)
+# # plt.show()
