@@ -76,28 +76,31 @@ import pandas as pd
 #     return fitness
 
 
+
+
 def get_fitness_regression(self):
 
     fitness = 5*self.deaths - 2.5*self.queens
 
     if self.deaths == self.queens:
-        fitness *= n
+        fitness *= self.n
     return fitness
 
 def get_fitness_tuple(self):
 
-    return (self.queens, self.deaths)
+     return (self.queens, self.deaths)
 
 
 
 
 
-Individual.get_fitness = get_fitness
+Individual.get_fitness = get_fitness_regression
+Individual.get_deaths = get_deaths
 
 print(Individual([1,1,1,0,
                    0,0,0,1,
                    0,1,0,0,
-                   0,1,0,1]).queens)
+                   0,1,0,1]).deaths)
 
 
 # def run_experiment(n, iterations, pop_size, crossover_prob, mutation_prob, selection, mutation, crossover):
