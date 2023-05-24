@@ -1,6 +1,6 @@
 from random import uniform, choice, sample, Random
 from operator import attrgetter
-from .charles import Individual
+from charles import Individual
 
 
 def fps(population):
@@ -56,7 +56,7 @@ def tournament_sel(population, size=4):
     if population.optim == "min":
         return min(tournament, key=attrgetter("fitness"))
 
-def double_tournament(population, tournament_size=4, fitness_tournament_size=7, parsimony_tournament_size=4, switch=False):
+def double_tournament(population, tournament_size=10, fitness_tournament_size=10, parsimony_tournament_size=4, switch=False):
     rng = Random()
 
     if switch and parsimony_tournament_size >= fitness_tournament_size:

@@ -150,8 +150,8 @@ def run_experiment(n, iterations, pop_size, crossover_prob, mutation_prob, selec
     print('Experiment Finalized')
 
 
-n = 8
-exp1 = run_experiment(n = n,iterations = 30, pop_size = 50, crossover_prob=0.9, mutation_prob=0.9, 
+n = 4
+exp1 = run_experiment(n = n,iterations = 15, pop_size = 50, crossover_prob=0.9, mutation_prob=0.9, 
                      selection=double_tournament, mutation = binary_mutation, crossover=single_point_co, gens=100)
 
 print(tabulate(exp1, headers='keys', tablefmt='psql'))
