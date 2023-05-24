@@ -34,7 +34,8 @@ def get_fitness_tuple(self):
 Individual.get_fitness = get_fitness_regression
 
 
-def run_experiment(n, iterations, pop_size, crossover_prob, mutation_prob, selection, mutation, crossover, gens, tournament_size = None, queens_tournament_size = None, deaths_tournament_size = None, switch = False):
+def run_experiment(n, iterations, pop_size, crossover_prob, mutation_prob, selection, mutation, crossover, gens, 
+                   tournament_size = None, queens_tournament_size = None, deaths_tournament_size = None, switch = False):
 
     df = pd.DataFrame()
 
@@ -87,22 +88,15 @@ def run_experiment(n, iterations, pop_size, crossover_prob, mutation_prob, selec
 
 
 n = 4
+exp1 = run_experiment(n = n, iterations = 10, pop_size = 50, crossover_prob=0.9, mutation_prob=0.9, mutation = binary_mutation, crossover=single_point_co, gens=100, 
+                      tournament_size=4, queens_tournament_size=4, deaths_tournament_size=2, switch=False, selection=double_tournament)
+                      
 
-print(run_experiment(n = n, iterations = 10, pop_size = 50, crossover_prob=0.9, mutation_prob=0.9, mutation = binary_mutation, crossover=single_point_co, gens=100, tournament_size=4, queens_tournament_size=4, deaths_tournament_size=2, switch=False, selection=double_tournament))
+print(tabulate(exp1, headers='keys', tablefmt='psql'))
 
-# n = 8
-# exp1 = run_experiment(n = n,iterations = 30, pop_size = 50, crossover_prob=0.9, mutation_prob=0.9, 
-#                      selection=tournament_sel, mutation = binary_mutation, crossover=single_point_co, gens=100)
+df_media = exp1.loc[:,['gens','queens', 'deaths', 'best_fitness']].groupby(by=["gens"]).mean()
 
-# print(tabulate(exp1, headers='keys', tablefmt='psql'))
-# # # exp2 = run_experiment(n = n,iterations = 30, pop_size = 30, crossover_prob=0.9, mutation_prob=0.9, 
-# # #                      selection=tournament_sel, mutation = binary_mutation, crossover=single_point_co
-
-# #print(type(exp1))
-
-# df_media = exp1.loc[:,['gens','queens', 'deaths', 'best_fitness']].groupby(by=["gens"]).mean()
-
-# print(tabulate(df_media, headers='keys', tablefmt='psql'))
+print(tabulate(df_media, headers='keys', tablefmt='psql'))
 
 #df_media  = exp1.loc[['queens', 'deaths','best_fitness']].
 # # sns.lineplot(exp1)

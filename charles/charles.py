@@ -134,7 +134,8 @@ class Population:
                 )
             )
 
-    def evolve(self, gens, xo_prob, mut_prob, select, mutate, crossover, elitism, tournament_size = None, queens_tournament_size = None, deaths_tournament_size = None, switch = False):
+    def evolve(self, gens, xo_prob, mut_prob, select, mutate, crossover, elitism, 
+               tournament_size = None, queens_tournament_size = None, deaths_tournament_size = None, switch = False):
         best_ind = []
         for i in range(gens):
 

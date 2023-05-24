@@ -86,7 +86,7 @@ def double_tournament(population, tournament_size, queens_tournament_size, death
 
     else:
         if switch and deaths_tournament_size < queens_tournament_size:
-            raise ValueError("Switch is true so Sf can't be bigger than Sp")
+            raise ValueError("Switch is true so queens size can't be bigger than deaths size")
         else:
-            raise ValueError("Sp can't be bigger than Sf")
+            raise ValueError("deaths size can't be bigger than queens size")
 
