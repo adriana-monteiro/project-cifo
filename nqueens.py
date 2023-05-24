@@ -1,7 +1,7 @@
 from charles.charles import Population, Individual
 from charles.search import hill_climb, sim_annealing
 from copy import deepcopy
-from charles.selection import fps, tournament_sel
+from charles.selection import fps, tournament_sel, double_tournament
 from charles.mutation import binary_mutation
 from charles.crossover import single_point_co
 from random import random
@@ -152,7 +152,7 @@ def run_experiment(n, iterations, pop_size, crossover_prob, mutation_prob, selec
 
 n = 8
 exp1 = run_experiment(n = n,iterations = 30, pop_size = 50, crossover_prob=0.9, mutation_prob=0.9, 
-                     selection=tournament_sel, mutation = binary_mutation, crossover=single_point_co, gens=100)
+                     selection=double_tournament, mutation = binary_mutation, crossover=single_point_co, gens=100)
 
 print(tabulate(exp1, headers='keys', tablefmt='psql'))
 # # exp2 = run_experiment(n = n,iterations = 30, pop_size = 30, crossover_prob=0.9, mutation_prob=0.9, 
