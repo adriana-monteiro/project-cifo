@@ -56,7 +56,7 @@ def tournament_sel(population, size=4):
     if population.optim == "min":
         return min(tournament, key=attrgetter("fitness"))
 
-def double_tournament(population, tournament_size=10, fitness_tournament_size=10, parsimony_tournament_size=4, switch=False):
+def double_tournament(population, tournament_size=4, fitness_tournament_size=2, parsimony_tournament_size=7, switch=True):
     rng = Random()
 
     if switch and parsimony_tournament_size >= fitness_tournament_size:
@@ -67,7 +67,7 @@ def double_tournament(population, tournament_size=10, fitness_tournament_size=10
             queens_winners.append(max([population[i] for i in queens_candidates], key=lambda x: x.get_queens()))
 
         death_candidates = [rng.randint(0, len(queens_winners) - 1) for i in range(fitness_tournament_size)]
-        winner = min([population[i] for i in death_candidates], key=lambda x: x.get_deaths())
+        winner = min([queens_winners[i] for i in death_candidates], key=lambda x: x.get_deaths())
 
         return winner
 
@@ -79,7 +79,7 @@ def double_tournament(population, tournament_size=10, fitness_tournament_size=10
             death_winners.append(min([population[i] for i in death_candidates], key=lambda x: x.get_deaths()))
 
         queens_candidates = [rng.randint(0, len(death_winners) - 1) for i in range(parsimony_tournament_size)]
-        winner = max([population[i] for i in queens_candidates], key=lambda x: x.get_queens())
+        winner = max([death_winners[i] for i in queens_candidates], key=lambda x: x.get_queens())
         return winner
 
     else:
