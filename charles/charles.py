@@ -22,7 +22,7 @@ class Individual:
 
         self.n = int(math.sqrt(len(self.representation)))
 
-        self.queens = self.representation.count(1)
+        self.queens = self.get_queens()
 
         self.deaths = self.get_deaths()
 
@@ -81,6 +81,10 @@ class Individual:
         
         return nr_dead
         #raise Exception("You need to monkey patch the deaths path.")
+
+    def get_queens(self):
+
+        return self.representation.count(1)
 
     def get_fitness(self):
         raise Exception("You need to monkey patch the fitness path.")
