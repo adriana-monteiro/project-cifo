@@ -82,9 +82,61 @@ def run_experiment(n, iterations, pop_size, crossover_prob, mutation_prob, selec
     return df
 
 
-n = 8
+def tournmanent_experiment(sizes):
 
-print(run_experiment(n = n, iterations = 30, pop_size = 50, crossover_prob=0.9, mutation_prob=0.9, mutation = binary_mutation, crossover=single_point_co, gens=100, tournament_size=7, selection=tournament_sel))
+    df_final = []
+
+    df_final_med = []
+
+    for size in sizes:
+
+        #print(size)
+
+        data = run_experiment(n = 8, iterations = 30, pop_size = 50, crossover_prob=0.9, mutation_prob=0.2, mutation = binary_mutation, crossover=single_point_co, gens=30, tournament_size=size, selection=tournament_sel)
+
+        df_final.append({'tournament_size': size, 'data': data})
+    
+        df_med = data.loc[:,['gens','queens', 'deaths', 'best_fitness']].groupby(by=["gens"]).agg({'queens': ['min', 'mean', 'max','std'],'deaths': ['min', 'mean', 'max','std'], 'best_fitness': ['min', 'mean', 'max','std']})
+        df_med[('queens', 'lower_bound')] = df_med[('queens', 'mean')] - (df_med[('queens', 'std')])/2
+        df_med[('queens', 'upper_bound')] = df_med[('queens', 'mean')] + (df_med[('queens', 'std')])/2
+        df_med[('deaths', 'lower_bound')] = df_med[('deaths', 'mean')] - (df_med[('deaths', 'std')])/2
+        df_med[('deaths', 'upper_bound')] = df_med[('deaths', 'mean')] + (df_med[('deaths', 'std')])/2
+        df_med[('best_fitness', 'lower_bound')] = df_med[('best_fitness', 'mean')] - (df_med[('best_fitness', 'std')])/2
+        df_med[('best_fitness', 'upper_bound')] = df_med[('best_fitness', 'mean')] + (df_med[('best_fitness', 'std')])/2
+
+
+        df_final_med.append({'size':size, 'df': df_med})
+
+    return df_final_med
+
+hello = tournmanent_experiment([2,4,6,7,8,9,10])
+
+print(hello)
+fig, ax = plt.subplots(figsize=(9,5))
+for i in range(len(hello)):
+
+    # ax.errorbar(hello[i]['df'].index, hello[i]['df'][('best_fitness','mean')], hello[i]['df'][('best_fitness','std')],label = hello[i]['size'] )
+
+    
+    ax.plot(hello[i]['df'].index, hello[i]['df'][('best_fitness','mean')], label=hello[i]['size'])
+    ax.plot(hello[i]['df'].index, hello[i]['df'][('best_fitness','lower_bound')], color='tab:blue', alpha=0.1)
+    ax.plot(hello[i]['df'].index, hello[i]['df'][('best_fitness','upper_bound')], color='tab:blue', alpha=0.1)
+    ax.legend(title='tournament size')
+    ax.fill_between(hello[i]['df'].index, hello[i]['df'][('best_fitness','lower_bound')], hello[i]['df'][('best_fitness','upper_bound')], alpha=0.2)
+    ax.set_xlabel('gens')
+    ax.set_ylabel('best fitness')
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+plt.show()
+
+    
+
+
+
+
+
+
+#print(run_experiment(n = 8, iterations = 30, pop_size = 50, crossover_prob=0.9, mutation_prob=0.2, mutation = binary_mutation, crossover=single_point_co, gens=100, tournament_size=7, selection=tournament_sel))
 
 # n = 8
 # exp1 = run_experiment(n = n,iterations = 30, pop_size = 50, crossover_prob=0.9, mutation_prob=0.9, 
