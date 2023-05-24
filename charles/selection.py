@@ -56,36 +56,35 @@ def tournament_sel(population, size=4):
     if population.optim == "min":
         return min(tournament, key=attrgetter("fitness"))
 
-def double_tournament(population, tournament_size=4, fitness_tournament_size =7, parsimony_tournament_size=4, switch=False):
-	
+def double_tournament(population, tournament_size=4, fitness_tournament_size=7, parsimony_tournament_size=4, switch=False):
     rng = Random()
 
-    if switch and parsimony_tournament_size>=fitness_tournament_size:
-	    queens_winners = []
+    if switch and parsimony_tournament_size >= fitness_tournament_size:
+        queens_winners = []
 
-	    for i in range(parsimony_tournament_size):
-		    queens_candidates = [rng.randint(0,len(population)-1) for i in range(tournament_size)]
-			queens_winners.append(max([population[i] for i in queens_candidates], key=lambda x: x.get_queens()))
-		
-		death_candidates = [rng.randint(0,len(queens_winners)-1) for i in range(fitness_tournament_size)]
-		winner = min([population[i] for i in death_candidates], key=lambda x: x.get_deaths())
-		
-		return winner
-		
-	elif switch == False and fitness_tournament_size>=parsimony_tournament_size:
+        for i in range(parsimony_tournament_size):
+            queens_candidates = [rng.randint(0, len(population) - 1) for i in range(tournament_size)]
+            queens_winners.append(max([population[i] for i in queens_candidates], key=lambda x: x.get_queens()))
 
-		death_winners = []
-		
-		for i in range(fitness_tournament_size):
-			death_candidates = [rng.randint(0,len(population)-1) for i in range(tournament_size)]
-			death_winners.append(min([population[i] for i in death_candidates], key=lambda x: x.get_deaths()))
-		
-		queens_candidates = [rng.randint(0,len(death_winners)-1) for i in range(parsimony_tournament_size)]
-		winner = max([population[i] for i in queens_candidates], key=lambda x: x.get_queens())
-		return winner
+        death_candidates = [rng.randint(0, len(queens_winners) - 1) for i in range(fitness_tournament_size)]
+        winner = min([population[i] for i in death_candidates], key=lambda x: x.get_deaths())
 
-	else:
-		if switch and parsimony_tournament_size<fitness_tournament_size:
-			raise ValueError("Switch is true so Sf can't bigger than Sp")
-		else:
-			raise ValueError("Sp can't be bigger than Sf")
+        return winner
+
+    elif not switch and fitness_tournament_size >= parsimony_tournament_size:
+        death_winners = []
+
+        for i in range(fitness_tournament_size):
+            death_candidates = [rng.randint(0, len(population) - 1) for i in range(tournament_size)]
+            death_winners.append(min([population[i] for i in death_candidates], key=lambda x: x.get_deaths()))
+
+        queens_candidates = [rng.randint(0, len(death_winners) - 1) for i in range(parsimony_tournament_size)]
+        winner = max([population[i] for i in queens_candidates], key=lambda x: x.get_queens())
+        return winner
+
+    else:
+        if switch and parsimony_tournament_size < fitness_tournament_size:
+            raise ValueError("Switch is true so Sf can't be bigger than Sp")
+        else:
+            raise ValueError("Sp can't be bigger than Sf")
+
