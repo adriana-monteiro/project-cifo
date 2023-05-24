@@ -19,15 +19,16 @@ class Individual:
                 self.representation = sample(valid_set, size)
         else:
             self.representation = representation
-        
 
         self.n = int(math.sqrt(len(self.representation)))
 
-        self.queens = representation.count(1)
+        self.queens = self.representation.count(1)
 
         self.deaths = self.get_deaths()
 
         self.fitness = self.get_fitness()
+    
+        
     def get_deaths(self):
         nr_dead = 0
 
@@ -79,6 +80,7 @@ class Individual:
                     nr_dead +=1
         
         return nr_dead
+        #raise Exception("You need to monkey patch the deaths path.")
 
     def get_fitness(self):
         raise Exception("You need to monkey patch the fitness path.")
@@ -103,9 +105,8 @@ class Individual:
         self.representation[position] = value
 
     def __repr__(self):
-        n = int(math.sqrt(len(self.representation)))
-
         s='\n'
+        n = self.n
         for i in range(n):
             s+=str([self.representation[i*n+j] for j in range(n)])+'\n'
 
@@ -132,6 +133,7 @@ class Population:
     def evolve(self, gens, xo_prob, mut_prob, select, mutate, crossover, elitism):
         best_ind = []
         for i in range(gens):
+
             new_pop = []
 
             if elitism:
@@ -141,13 +143,14 @@ class Population:
                     elite = deepcopy(min(self.individuals, key=attrgetter("fitness")))
 
             while len(new_pop) < self.size:
+
                 parent1, parent2 = select(self), select(self)
 
                 if random() < xo_prob:
                     offspring1, offspring2 = crossover(parent1, parent2)
                 else:
-                    offspring1, offspring2 = parent1, parent2
-
+                    offspring1, offspring2 = parent1.representation, parent2.representation
+                
                 if random() < mut_prob:
                     offspring1 = mutate(offspring1)
                 if random() < mut_prob:
@@ -175,11 +178,11 @@ class Population:
             if self.optim == "max":
                 print(f'Best Individual: {max(self, key=attrgetter("fitness"))}')
             elif self.optim == "min":
+                #print(f'Best Individual: {min(self, key=attrgetter("fitness"))}')
                 best_ind.append(deepcopy(min(self.individuals, key=attrgetter("fitness"))))
         
         self.bestindvs = best_ind
-               # print(f'Best Individual: {min(self, key=attrgetter("fitness"))}') 
-
+    
     def __len__(self):
         return len(self.individuals)
 
