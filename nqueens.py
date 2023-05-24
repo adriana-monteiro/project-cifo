@@ -1,7 +1,7 @@
 from charles.charles import Population, Individual
 from charles.search import hill_climb, sim_annealing
 from copy import deepcopy
-from charles.selection import fps, tournament_sel
+from charles.selection import fps, tournament_sel, double_tournament
 from charles.mutation import binary_mutation
 from charles.crossover import single_point_co
 from random import random
@@ -34,7 +34,7 @@ def get_fitness_tuple(self):
 Individual.get_fitness = get_fitness_regression
 
 
-def run_experiment(n, iterations, pop_size, crossover_prob, mutation_prob, selection, mutation, crossover, gens, tournament_size = None):
+def run_experiment(n, iterations, pop_size, crossover_prob, mutation_prob, selection, mutation, crossover, gens, tournament_size = None, queens_tournament_size = None, deaths_tournament_size = None, switch = False):
 
     df = pd.DataFrame()
 
@@ -53,7 +53,8 @@ def run_experiment(n, iterations, pop_size, crossover_prob, mutation_prob, selec
 
         pop.evolve(gens=gens, xo_prob=crossover_prob, mut_prob=mutation_prob, select=selection,
                  mutate=mutation, crossover=crossover,
-                 elitism=True, tournament_size=tournament_size)
+                 elitism=True, tournament_size=tournament_size, queens_tournament_size=queens_tournament_size,
+                 deaths_tournament_size=deaths_tournament_size, switch=switch)
         
         best_indvs_fit = [i.fitness for i in pop.bestindvs]
         best_indvs_queens = [i.queens for i in pop.bestindvs]
@@ -67,6 +68,9 @@ def run_experiment(n, iterations, pop_size, crossover_prob, mutation_prob, selec
         df_temp['mut_prob'] = mutation_prob
         df_temp['select'] = selection.__name__
         df_temp['tournament_size'] = tournament_size
+        df_temp['queens_tournament_size'] = queens_tournament_size
+        df_temp['deaths_tournament_size'] = deaths_tournament_size
+        df_temp['switch'] = switch
         df_temp['best_fitness'] = best_indvs_fit
         df_temp['queens']= best_indvs_queens
         df_temp['deaths'] = best_indvs_deaths
@@ -82,9 +86,9 @@ def run_experiment(n, iterations, pop_size, crossover_prob, mutation_prob, selec
     return df
 
 
-n = 8
+n = 4
 
-print(run_experiment(n = n, iterations = 30, pop_size = 50, crossover_prob=0.9, mutation_prob=0.9, mutation = binary_mutation, crossover=single_point_co, gens=100, tournament_size=7, selection=tournament_sel))
+print(run_experiment(n = n, iterations = 10, pop_size = 50, crossover_prob=0.9, mutation_prob=0.9, mutation = binary_mutation, crossover=single_point_co, gens=100, tournament_size=4, queens_tournament_size=4, deaths_tournament_size=2, switch=False, selection=double_tournament))
 
 # n = 8
 # exp1 = run_experiment(n = n,iterations = 30, pop_size = 50, crossover_prob=0.9, mutation_prob=0.9, 
