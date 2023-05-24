@@ -33,7 +33,9 @@ def fps(population):
         raise Exception("No optimization specified (min or max).")
 
 
-def tournament_sel(population, size=4):
+
+
+def tournament_sel(population, size):
     """Tournament selection implementation.
 
     Args:

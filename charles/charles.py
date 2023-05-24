@@ -134,7 +134,7 @@ class Population:
                 )
             )
 
-    def evolve(self, gens, xo_prob, mut_prob, select, mutate, crossover, elitism):
+    def evolve(self, gens, xo_prob, mut_prob, select, mutate, crossover, elitism, tournament_size = None ):
         best_ind = []
         for i in range(gens):
 
@@ -147,8 +147,12 @@ class Population:
                     elite = deepcopy(min(self.individuals, key=attrgetter("fitness")))
 
             while len(new_pop) < self.size:
+                
+                if tournament_size is not None:
+                    parent1, parent2 = select(self, size=tournament_size), select(self, size = tournament_size)
 
-                parent1, parent2 = select(self), select(self)
+                else:
+                    parent1, parent2 = select(self), select(self)
 
                 if random() < xo_prob:
                     offspring1, offspring2 = crossover(parent1, parent2)
