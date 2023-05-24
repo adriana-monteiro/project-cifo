@@ -1,6 +1,6 @@
 from random import uniform, choice, sample, Random
 from operator import attrgetter
-from charles import Individual
+from .charles import Individual
 
 
 def fps(population):
