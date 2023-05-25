@@ -22,7 +22,7 @@ class Individual:
 
         self.n = int(math.sqrt(len(self.representation)))
 
-        self.queens = self.representation.count(1)
+        self.queens = self.get_queens()
 
         self.deaths = self.get_deaths()
 
@@ -82,6 +82,10 @@ class Individual:
         return nr_dead
         #raise Exception("You need to monkey patch the deaths path.")
 
+    def get_queens(self):
+
+        return self.representation.count(1)
+
     def get_fitness(self):
         raise Exception("You need to monkey patch the fitness path.")
 
@@ -130,7 +134,8 @@ class Population:
                 )
             )
 
-    def evolve(self, gens, xo_prob, mut_prob, select, mutate, crossover, elitism, tournament_size = None ):
+    def evolve(self, gens, xo_prob, mut_prob, select, mutate, crossover, elitism, 
+               tournament_size = None, queens_tournament_size = None, deaths_tournament_size = None, switch = False):
         best_ind = []
         for i in range(gens):
 
@@ -144,8 +149,11 @@ class Population:
 
             while len(new_pop) < self.size:
                 
-                if tournament_size is not None:
-                    parent1, parent2 = select(self, size=tournament_size), select(self, size = tournament_size)
+                if tournament_size is not None and queens_tournament_size is None and deaths_tournament_size is None:
+                    parent1, parent2 = select(self,tournament_size), select(self,tournament_size)
+                
+                elif tournament_size is not None and queens_tournament_size is not None and deaths_tournament_size is not None:
+                    parent1, parent2 = select(self,tournament_size,queens_tournament_size,deaths_tournament_size,switch), select(self,tournament_size,queens_tournament_size,deaths_tournament_size,switch)
 
                 else:
                     parent1, parent2 = select(self), select(self)
