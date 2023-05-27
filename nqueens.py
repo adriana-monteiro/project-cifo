@@ -1,6 +1,6 @@
 from charles.charles import Population, Individual
 from copy import deepcopy
-from charles.selection import fps, tournament_sel
+from charles.selection import fps, tournament_sel, double_tournament
 from charles.mutation import binary_mutation
 from charles.crossover import single_point_co
 from random import random
@@ -35,6 +35,11 @@ def get_fitness_tuple(self):
 Individual.get_fitness = get_fitness_regression
 
 
+<<<<<<< HEAD
+=======
+def run_experiment(n, iterations, pop_size, crossover_prob, mutation_prob, selection, mutation, crossover, gens, 
+                   tournament_size = None, queens_tournament_size = None, deaths_tournament_size = None, switch = False):
+>>>>>>> main
 
 # ################################################# first single tournament experiment #################################################
 
@@ -72,6 +77,7 @@ for i in range(len(tournament_exp_avg)):
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
 
+<<<<<<< HEAD
 track_dic_tourn1['sizes'] = sizes_tourn1
 track_dic_tourn1['best_fitness_avg'] = bf_tourn1
 f.write(str(track_dic_tourn1)+'\n\n')
@@ -83,6 +89,31 @@ plt.savefig('tournament_size2-10_2.png')
 f.close()
 
 # #plt.show()
+=======
+        pop.evolve(gens=gens, xo_prob=crossover_prob, mut_prob=mutation_prob, select=selection,
+                 mutate=mutation, crossover=crossover,
+                 elitism=True, tournament_size=tournament_size, queens_tournament_size=queens_tournament_size,
+                 deaths_tournament_size=deaths_tournament_size, switch=switch)
+        
+        best_indvs_fit = [i.fitness for i in pop.bestindvs]
+        best_indvs_queens = [i.queens for i in pop.bestindvs]
+        best_indvs_deaths = [i.deaths for i in pop.bestindvs]
+
+        df_temp['run'] = [run+1]*gens
+        df_temp['gens'] = range(1,gens+1)
+        df_temp['crossover'] = crossover.__name__
+        df_temp['xo_prob'] = crossover_prob
+        df_temp['mutate'] = mutation.__name__
+        df_temp['mut_prob'] = mutation_prob
+        df_temp['select'] = selection.__name__
+        df_temp['tournament_size'] = tournament_size
+        df_temp['queens_tournament_size'] = queens_tournament_size
+        df_temp['deaths_tournament_size'] = deaths_tournament_size
+        df_temp['switch'] = switch
+        df_temp['best_fitness'] = best_indvs_fit
+        df_temp['queens']= best_indvs_queens
+        df_temp['deaths'] = best_indvs_deaths
+>>>>>>> main
 
 ################################################# second single tournament experiment #################################################
 
@@ -91,6 +122,7 @@ tournament_exp_2 = tournmanent_experiment([7,8,9,10,11],
                                             crossover_prob=0.9,mutation_prob=0.2, mutation=binary_mutation, crossover=single_point_co)
 
 
+<<<<<<< HEAD
 tournament_exp_avg_2 = tournament_exp_2[1]
 
 fig, ax = plt.subplots(figsize=(9,5))
@@ -126,6 +158,18 @@ f.write('\n\n\n')
 plt.savefig('tournament_size7-11_2.png')
 f.close()
 
+=======
+n = 4
+exp1 = run_experiment(n = n, iterations = 10, pop_size = 50, crossover_prob=0.9, mutation_prob=0.9, mutation = binary_mutation, crossover=single_point_co, gens=100, 
+                      tournament_size=4, queens_tournament_size=4, deaths_tournament_size=2, switch=False, selection=double_tournament)
+                      
+
+print(tabulate(exp1, headers='keys', tablefmt='psql'))
+
+df_media = exp1.loc[:,['gens','queens', 'deaths', 'best_fitness']].groupby(by=["gens"]).mean()
+
+print(tabulate(df_media, headers='keys', tablefmt='psql'))
+>>>>>>> main
 
 
 
