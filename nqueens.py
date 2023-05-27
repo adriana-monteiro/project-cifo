@@ -1,5 +1,4 @@
 from charles.charles import Population, Individual
-from charles.search import hill_climb, sim_annealing
 from copy import deepcopy
 from charles.selection import fps, tournament_sel
 from charles.mutation import binary_mutation
@@ -205,7 +204,7 @@ plt.savefig('doubletournament_switch_2.png')
 
 
 
-# ######################## making double tournament experiment 2 #############################
+# ########################################### making double tournament experiment 2 #######################################################
 double_tournament_parameters_2 = {"t_size": [2,4,6,8,10],
            "queens_t_size": [2,4,6,8,10] ,
            "deaths_t_size": [2,4,6,8,10],
