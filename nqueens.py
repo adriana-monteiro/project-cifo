@@ -253,52 +253,101 @@ Individual.get_fitness = get_fitness_regression
 # f.close()
 
 
+########################################### final search for the best algorithm! #######################################################
 
-
-# grid_parameters = {'mutation': [binary_mutation, swap_mutation, inversion_mutation],
-#                    'mut_prob': [0.2,0.4,0.6,0.8,0.9],
-#                    'crossover': [single_point_co, k_point_co, cycle_crossover, pmx],
-#                    'xo_prob': [0.2,0.4,0.6,0.8,0.9],
-#                    'selection': [ranking, tournament_sel, double_tournament]
-#                 }
-
-grid_parameters = {'mutation': [binary_mutation, ],
-                   'mut_prob': [0.2,0.4,],
-                   'crossover': [single_point_co],
-                   'xo_prob': [0.2,0.4,],
-                   'selection': [ranking,]
+grid_parameters = {'mutation': [binary_mutation, swap_mutation, inversion_mutation],
+                   'mut_prob': [0.2,0.4,0.6,0.8,0.9],
+                   'crossover': [single_point_co, k_point_co, cycle_crossover, pmx],
+                   'xo_prob': [0.2,0.4,0.6,0.8,0.9],
+                   'selection': [ranking, tournament_sel, double_tournament]
                 }
 
-grid_search_exp_final = grid_search(grid_parameters, 10)[0]
+# grid_parameters = {'mutation': [binary_mutation],
+#                    'mut_prob': [0.2,0.4,0.6],
+#                    'crossover': [single_point_co],
+#                    'xo_prob': [0.2,0.4],
+#                    'selection': [ranking]
+#                 } #these were for testing purposes
+
+grid_search_exp_final = grid_search(grid_parameters, 10)[0] #done for 10x10 chessboard
 grid_search_exp_avg = grid_search(grid_parameters, 10)[1]
 
 
-best_list = grid_search_exp_avg[:5].sort(key=lambda x: min(grid_search_exp_avg[x]['df'][('best_fitness','mean')]))
+# lets start a list where we have the first 5 solutions; we want to plot only the best solutions.
+best_list = grid_search_exp_avg[:5]
 
-print(best_list)
+# function to sort the list of dictionaries by the best fitness of each dataframe inside the dictionary
+def get_min_fitness(dictionary):
+    df = dictionary['df']
+    min_fitness = df[('best_fitness','mean')].min()
+    return min_fitness
 
-# for i in range(5, len(grid_search_exp_avg)):
+# Sort the list of dictionaries based on the minimum fitness value of the dataframes inside it
+best_list_sorted = sorted(best_list, key=get_min_fitness)
 
-#     min_fit = min(grid_search_exp_avg[i]['df'][('best_fitness','mean')])
+# print([get_min_fitness(best_list_sorted[i]) for i in range(len(best_list_sorted))])
 
-#     max_fit = 
+# run in every dict in the list 
+for i in range(5, len(grid_search_exp_avg)):
 
-#     if min_fit < 
+    # see if the current dictionary has better final fitness than the worst in our list (the last element)
+    if get_min_fitness(grid_search_exp_avg[i]) < get_min_fitness(best_list_sorted[-1]):
+
+        best_list_sorted[-1] = grid_search_exp_avg[i]
+
+    best_list_sorted.sort(key=get_min_fitness)
+
+# print([get_min_fitness(best_list_sorted[i]) for i in range(len(best_list_sorted))])
+
+track_dic_grid = {}
+
+mutation_grid = []
+mut_prob_grid = []
+crossover_grid = []
+co_prob_grid = []
+selection_grid = []
+bf_grid = []
+
+fig, ax = plt.subplots(figsize=(12,7))
+
+for i in range(len(best_list_sorted)):
+
+    mutation_grid.append(best_list_sorted[i]['parameters']['mutation'].__name__)
+    mut_prob_grid.append(best_list_sorted[i]['parameters']['mut_prob'])
+    crossover_grid.append(best_list_sorted[i]['parameters']['crossover'].__name__)
+    co_prob_grid.append(best_list_sorted[i]['parameters']['xo_prob'])
+    selection_grid.append(best_list_sorted[i]['parameters']['selection'].__name__)
+    bf_grid.append(min(best_list_sorted[i]['df'][('best_fitness','mean')]))
+
+    ax.plot(best_list_sorted[i]['df'].index, best_list_sorted[i]['df'][('best_fitness','mean')], 
+            label = f"{best_list_sorted[i]['parameters']['mutation'].__name__},prob={best_list_sorted[i]['parameters']['mut_prob']};{best_list_sorted[i]['parameters']['crossover'].__name__},prob={best_list_sorted[i]['parameters']['xo_prob']};{best_list_sorted[i]['parameters']['selection'].__name__}")
+    ax.plot(best_list_sorted[i]['df'].index, best_list_sorted[i]['df'][('best_fitness','lower_bound')], color='tab:blue', alpha=0.1)
+    ax.plot(best_list_sorted[i]['df'].index, best_list_sorted[i]['df'][('best_fitness','upper_bound')], color='tab:blue', alpha=0.1)
+    ax.fill_between(best_list_sorted[i]['df'].index, best_list_sorted[i]['df'][('best_fitness','lower_bound')], best_list_sorted[i]['df'][('best_fitness','upper_bound')], alpha=0.2)
+    ax.set_xlabel('Generation',size = 14)
+    ax.set_ylabel('Best Fitness Found', size = 14)
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+    ax.legend()
 
 
+track_dic_grid['mutation'] = mutation_grid
+track_dic_grid['mut_prob'] = mut_prob_grid
+track_dic_grid['crossover'] = crossover_grid
+track_dic_grid['xo_prob'] = co_prob_grid
+track_dic_grid['selection'] = selection_grid
+track_dic_grid['best_fitness_avg'] = bf_grid
 
 
+f = open("results_final_grid.txt", "a")
+f.write("Final grid search testing results\n\n")
+f.write(str(track_dic_grid)+'\n\n')
+track_dic_grid_df = pd.DataFrame(track_dic_grid).sort_values(by='best_fitness_avg')
+track_dic_grid_df.sort_values(by='best_fitness_avg', inplace=True)
+f.write(tabulate(track_dic_grid_df,tablefmt="github", headers='keys'))
+f.write('\n\n\n')
 
+f.close()
 
-#     ax.plot(double_tournament_exp_avg[i]['df'].index, double_tournament_exp_avg[i]['df'][('best_fitness','mean')], color = color)
-#     ax.plot(double_tournament_exp_avg[i]['df'].index, double_tournament_exp_avg[i]['df'][('best_fitness','lower_bound')], color=color, alpha=0.1)
-#     ax.plot(double_tournament_exp_avg[i]['df'].index, double_tournament_exp_avg[i]['df'][('best_fitness','upper_bound')], color=color, alpha=0.1)
-#     ax.fill_between(double_tournament_exp_avg[i]['df'].index, double_tournament_exp_avg[i]['df'][('best_fitness','lower_bound')], double_tournament_exp_avg[i]['df'][('best_fitness','upper_bound')], alpha=0.2, color = color)
-#     ax.set_xlabel('Generation',size = 14)
-#     ax.set_ylabel('Best Fitness Found', size = 14)
-#     ax.spines['top'].set_visible(False)
-#     ax.spines['right'].set_visible(False)
-#     red_patch = mpatches.Patch(color='red', label='False', linewidth=.1)
-#     blue_patch = mpatches.Patch(color='blue', label='True',linewidth=.1)
-#     ax.legend(handles=[red_patch, blue_patch], title = 'Switch')
-
+plt.savefig('final_grid.png')
+plt.show()

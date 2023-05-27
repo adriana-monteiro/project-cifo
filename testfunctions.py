@@ -160,7 +160,7 @@ def grid_search(pars, n):
     for dictionary in ds: 
         print(dictionary)
 
-        data = run_experiment(n = n,runs=1, pop_size = 200, crossover_prob = dictionary["xo_prob"],
+        data = run_experiment(n = n,runs=30, pop_size = 200, crossover_prob = dictionary["xo_prob"],
                                                 mutation_prob = dictionary['mut_prob'], 
                                                 selection = dictionary['selection'], 
                                                 mutation = dictionary['mutation'],
