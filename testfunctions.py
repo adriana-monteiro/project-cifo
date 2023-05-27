@@ -147,9 +147,9 @@ def double_tournament_experiment(pars,n, runs, pop_size, crossover_prob, mutatio
 ##################################################################### grid search ########################################################
 
 def grid_search(pars, n):
-    df_list = []
+    df_final = []
 
-    df_mean_exp = []
+    df_final_med = []
 
     keys=pars.keys()
     combinations=itertools.product(*pars.values())
@@ -157,22 +157,29 @@ def grid_search(pars, n):
 
     i = 0
 
-
-
     for dictionary in ds: 
         print(dictionary)
 
-        df_list.append({"parameters": dictionary ,
-                        "data": run_experiment(n = n,runs=1, pop_size = 200, crossover_prob = dictionary["xo_prob"],
+        data = run_experiment(n = n,runs=1, pop_size = 200, crossover_prob = dictionary["xo_prob"],
                                                 mutation_prob = dictionary['mut_prob'], 
                                                 selection = dictionary['selection'], 
                                                 mutation = dictionary['mutation'],
-                                                crossover = dictionary['crossover'], gens=30)})
+                                                crossover = dictionary['crossover'], gens=30)
 
 
-        # df_mean_exp.append({"parameters": dictionary ,
-        #                 "data": df_list[i]["data"].loc[:,['gens','queens', 'deaths', 'best_fitness']].groupby(by=["gens"]).mean()})
 
-       # print(tabulate(df_mean_exp[i]["data"], headers='keys', tablefmt='psql'))
+        df_final.append({'parameters': dictionary, 'data': data})
 
-        i+=1
+        df_med = data.loc[:,['gens','queens', 'deaths', 'best_fitness']].groupby(by=["gens"]).agg({'queens': ['min', 'mean', 'max','std'],'deaths': ['min', 'mean', 'max','std'], 'best_fitness': ['min', 'mean', 'max','std']})
+        df_med[('queens', 'lower_bound')] = df_med[('queens', 'mean')] - (df_med[('queens', 'std')])/2
+        df_med[('queens', 'upper_bound')] = df_med[('queens', 'mean')] + (df_med[('queens', 'std')])/2
+        df_med[('deaths', 'lower_bound')] = df_med[('deaths', 'mean')] - (df_med[('deaths', 'std')])/2
+        df_med[('deaths', 'upper_bound')] = df_med[('deaths', 'mean')] + (df_med[('deaths', 'std')])/2
+        df_med[('best_fitness', 'lower_bound')] = df_med[('best_fitness', 'mean')] - (df_med[('best_fitness', 'std')])/2
+        df_med[('best_fitness', 'upper_bound')] = df_med[('best_fitness', 'mean')] + (df_med[('best_fitness', 'std')])/2
+
+
+        df_final_med.append({'parameters':dictionary, 'df': df_med})
+
+
+    return df_final, df_final_med

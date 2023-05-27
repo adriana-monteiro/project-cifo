@@ -255,11 +255,50 @@ Individual.get_fitness = get_fitness_regression
 
 
 
-grid_parameters = {'mutation': [binary_mutation, swap_mutation, inversion_mutation],
-                   'mut_prob': [0.2,0.4,0.6,0.8,0.9],
-                   'crossover': [single_point_co, k_point_co, cycle_crossover, pmx],
-                   'xo_prob': [0.2,0.4,0.6,0.8,0.9],
-                   'selection': [ranking, tournament_sel, double_tournament]
+# grid_parameters = {'mutation': [binary_mutation, swap_mutation, inversion_mutation],
+#                    'mut_prob': [0.2,0.4,0.6,0.8,0.9],
+#                    'crossover': [single_point_co, k_point_co, cycle_crossover, pmx],
+#                    'xo_prob': [0.2,0.4,0.6,0.8,0.9],
+#                    'selection': [ranking, tournament_sel, double_tournament]
+#                 }
+
+grid_parameters = {'mutation': [binary_mutation, ],
+                   'mut_prob': [0.2,0.4,],
+                   'crossover': [single_point_co],
+                   'xo_prob': [0.2,0.4,],
+                   'selection': [ranking,]
                 }
 
-hello = grid_search(grid_parameters, 10)
+grid_search_exp_final = grid_search(grid_parameters, 10)[0]
+grid_search_exp_avg = grid_search(grid_parameters, 10)[1]
+
+
+best_list = grid_search_exp_avg[:5].sort(key=lambda x: min(grid_search_exp_avg[x]['df'][('best_fitness','mean')]))
+
+print(best_list)
+
+# for i in range(5, len(grid_search_exp_avg)):
+
+#     min_fit = min(grid_search_exp_avg[i]['df'][('best_fitness','mean')])
+
+#     max_fit = 
+
+#     if min_fit < 
+
+
+
+
+
+
+#     ax.plot(double_tournament_exp_avg[i]['df'].index, double_tournament_exp_avg[i]['df'][('best_fitness','mean')], color = color)
+#     ax.plot(double_tournament_exp_avg[i]['df'].index, double_tournament_exp_avg[i]['df'][('best_fitness','lower_bound')], color=color, alpha=0.1)
+#     ax.plot(double_tournament_exp_avg[i]['df'].index, double_tournament_exp_avg[i]['df'][('best_fitness','upper_bound')], color=color, alpha=0.1)
+#     ax.fill_between(double_tournament_exp_avg[i]['df'].index, double_tournament_exp_avg[i]['df'][('best_fitness','lower_bound')], double_tournament_exp_avg[i]['df'][('best_fitness','upper_bound')], alpha=0.2, color = color)
+#     ax.set_xlabel('Generation',size = 14)
+#     ax.set_ylabel('Best Fitness Found', size = 14)
+#     ax.spines['top'].set_visible(False)
+#     ax.spines['right'].set_visible(False)
+#     red_patch = mpatches.Patch(color='red', label='False', linewidth=.1)
+#     blue_patch = mpatches.Patch(color='blue', label='True',linewidth=.1)
+#     ax.legend(handles=[red_patch, blue_patch], title = 'Switch')
+
