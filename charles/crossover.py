@@ -1,4 +1,4 @@
-from random import randint, sample, uniform
+from random import randint, sample, uniform, shuffle
 
 
 def single_point_co(p1, p2):
@@ -19,91 +19,123 @@ def single_point_co(p1, p2):
     return offspring1, offspring2
 
 
-def cycle_xo(p1, p2):
-    """Implementation of cycle crossover.
+def cycle_crossover(p1, p2):
 
-    Args:
-        p1 (Individual): First parent for crossover.
-        p2 (Individual): Second parent for crossover.
-
-    Returns:
-        Individuals: Two offspring, resulting from the crossover.
-    """
-    # offspring placeholders
     offspring1 = [None] * len(p1)
-    offspring2 = [None] * len(p1)
+    offspring2 = [None] * len(p2)
+    offspring1_indexes = [None] * len(p1)
+    offspring2_indexes = [None] * len(p2)
 
+    p1_indexes = list(range(len(p1)))
+    p2_indexes = list(range(len(p2)))
+    shuffle(p1_indexes)
+    shuffle(p2_indexes)
+
+    start_index = p1_indexes[0]
+    
     while None in offspring1:
-        index = offspring1.index(None)
-        val1 = p1[index]
-        val2 = p2[index]
+        index = start_index
+        val1 = p1_indexes[index]
+        val2 = p2_indexes[index]
 
-        # copy the cycle elements
         while val1 != val2:
-            offspring1[index] = p1[index]
-            offspring2[index] = p2[index]
-            val2 = p2[index]
-            index = p1.index(val2)
+            offspring1_indexes[index] = p1_indexes[index]
+            offspring1[index] = p1[p1_indexes[index]]
+            offspring2_indexes[index] = p2_indexes[index]
+            offspring2[index] = p2[p2_indexes[index]]
+            val2 = p2_indexes[index]
+            index = p1_indexes.index(val2)
 
-        # copy the rest
         for element in offspring1:
             if element is None:
                 index = offspring1.index(None)
                 if offspring1[index] is None:
-                    offspring1[index] = p2[index]
-                    offspring2[index] = p1[index]
+                    offspring1_indexes[index] = p2_indexes[index]
+                    offspring1[index] = p2[p2_indexes[index]]
+                    offspring2_indexes[index] = p1_indexes[index]
+                    offspring2[index] = p1[p1_indexes[index]]
+    
+    sorted_offspring1 = [offspring1 for _, offspring1 in sorted(zip(offspring1_indexes,offspring1))]
+    sorted_offspring2 = [offspring2 for _, offspring2 in sorted(zip(offspring2_indexes,offspring2))]
+
+    return sorted_offspring1,sorted_offspring2
+
+
+def pmx(p1, p2):
+  
+    p1_indexes = sample(range(len(p1)), len(p1))
+    p2_indexes = sample(range(len(p2)), len(p2))
+
+    xo_points = sample(range(len(p1_indexes))+1, 2)
+    xo_points.sort()
+
+    window_p1 = {}
+    window_p2 = {}
+
+    for i in range(xo_points[0], xo_points[1]):
+       if p2_indexes[i] not in window_p1:
+            window_p1[p1_indexes[i]] = p2_indexes[i]
+       if p1_indexes[i] not in window_p2:
+            window_p2[p2_indexes[i]] = p1_indexes[i]
+
+    def get_off(indexes, parent):
+
+        ofspr = []
+        ofspr_index = []
+
+        for index,value in zip(indexes, parent):
+
+            print(index,value)
+
+            if index not in window_p1 and index not in window_p2 and index not in ofspr_index:
+                ofspr_index.append(index)
+                ofspr.append(value)
+
+            elif index in window_p1 and window_p1[index] not in ofspr_index:
+                ofspr_index.append(window_p1[index])
+                ofspr.append(p2[p2_indexes.index(window_p1[index])])
+
+            elif index in window_p2 and window_p2[index] not in ofspr_index:
+                ofspr_index.append(window_p2[index])
+                ofspr.append(p1[p1_indexes.index(window_p2[index])])
+        
+        return ofspr
+
+    off1, off2 = get_off(p1_indexes,p1),get_off(p2_indexes, p2)
+
+    return off1,off2
+
+
+
+def k_point_co(p1,p2,k):
+    offspring1 = [None] * len(p1)
+    offspring2 = [None] * len(p1)
+    xo_points = sample(range(1,len(p1)), k)
+    xo_points.sort()
+
+    for i in range(xo_points[0]):
+        offspring1[i]=p1[i]
+        offspring2[i]=p2[i]
+    switch=0
+    for j in range(1,k):
+        if switch==0:
+            for i in range(xo_points[j-1],xo_points[j]):
+                offspring1[i]=p2[i]
+                offspring2[i]=p1[i]
+            switch=1
+        else:
+            for i in range(xo_points[j-1],xo_points[j]):
+                offspring1[i]=p1[i]
+                offspring2[i]=p2[i]
+            switch=0
+
+    if switch==0:
+        for i in range(xo_points[-1],len(p1)):
+            offspring1[i]=p2[i]
+            offspring2[i]=p1[i]
+    else:
+        for i in range(xo_points[-1],len(p1)):
+            offspring1[i]=p1[i]
+            offspring2[i]=p2[i]
 
     return offspring1, offspring2
-
-def pmx(p1,p2):
-    # xo_points =  sample(range(len(p1)), 2)
-    # xo_points.sort() 
-
-    xo_points= [3,6]
-
-    def pmx_offspring(x,y):
-        o = [None] * len(x)
-
-        # offspring 2
-        o[xo_points[0]:xo_points[1]] = x[xo_points[0]:xo_points[1]]
-        z = set(y[xo_points[0]:xo_points[1]]) - set(x[xo_points[0]:xo_points[1]])
-
-        for i in z:
-            temp = i
-            index = y.index(x[y.index(temp)])
-
-            while o[index] is not None:
-                temp = index
-                index = y.index(x[temp])
-
-            o[index] = i
-
-        #nrs that do not exist in the segment
-        while None in o:
-            index = o.index(None)
-            o[index] = y[index]
-
-        return o
-
-
-    o1,o2 = pmx_offspring(p1,p2), pmx_offspring(p2,p1)
-
-    return o1,o2
-
-def arithmetic_xo(p1,p2): #cant use it if we want only integers in the solutions
-
-    alpha = uniform(0,1)
-    o1 = [None] * len(p1)
-    o2 = [None] * len(p2)
-
-    for i in range(len(p1)):
-        o1[i] = p1[i]*alpha + (1-alpha) * p2[i]
-        o2[i] = p2[i]*alpha + (1-alpha) * p1[i]
-
-    return o1,o2
-
-
-if __name__ == '__main__':
-    p1, p2 = [9,8,4,5,6,7,1,3,2,10], [8,7,1,2,3,10,9,5,4,6]
-    o1, o2 = arithmetic_xo(p1, p2)
-    print(o1, o2)
