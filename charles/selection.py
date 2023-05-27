@@ -46,7 +46,7 @@ def fps(population):
 
 
 
-def tournament_sel(population, tournament_size):
+def tournament_sel(population, tournament_size=9):
     """Tournament selection implementation.
 
     Args:
@@ -74,7 +74,7 @@ def tournament_sel(population, tournament_size):
 
 
 
-def double_tournament(population, tournament_size, queens_tournament_size, deaths_tournament_size, switch):
+def double_tournament(population, tournament_size=10, queens_tournament_size=6, deaths_tournament_size=2, switch=False):
     rng = Random()
 
     if switch and deaths_tournament_size >= queens_tournament_size:
@@ -154,36 +154,4 @@ def ranking(population):
 
     else:
         raise Exception("No optimization specified (min or max).")
-
-def double_tournament(population, tournament_size, queens_tournament_size, deaths_tournament_size, switch):
-    rng = Random()
-
-    if switch and deaths_tournament_size >= queens_tournament_size:
-        queens_winners = []
-
-        for i in range(deaths_tournament_size):
-            queens_candidates = [rng.randint(0, len(population) - 1) for i in range(tournament_size)]
-            queens_winners.append(max([population[i] for i in queens_candidates], key=lambda x: x.get_queens()))
-
-        death_candidates = [rng.randint(0, len(queens_winners) - 1) for i in range(queens_tournament_size)]
-        winner = min([queens_winners[i] for i in death_candidates], key=lambda x: x.get_deaths())
-
-        return winner
-
-    elif not switch and queens_tournament_size >= deaths_tournament_size:
-        death_winners = []
-
-        for i in range(queens_tournament_size):
-            death_candidates = [rng.randint(0, len(population) - 1) for i in range(tournament_size)]
-            death_winners.append(min([population[i] for i in death_candidates], key=lambda x: x.get_deaths()))
-
-        queens_candidates = [rng.randint(0, len(death_winners) - 1) for i in range(deaths_tournament_size)]
-        winner = max([death_winners[i] for i in queens_candidates], key=lambda x: x.get_queens())
-        return winner
-
-    else:
-        if switch and deaths_tournament_size < queens_tournament_size:
-            raise ValueError("Switch is true so queens size can't be bigger than deaths size")
-        else:
-            raise ValueError("deaths size can't be bigger than queens size")
 

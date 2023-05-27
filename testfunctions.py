@@ -144,10 +144,9 @@ def double_tournament_experiment(pars,n, runs, pop_size, crossover_prob, mutatio
 
     return df_final, df_final_med
 
-########################################### grid search ###################################
+##################################################################### grid search ########################################################
 
 def grid_search(pars, n):
-
     df_list = []
 
     df_mean_exp = []
@@ -158,19 +157,21 @@ def grid_search(pars, n):
 
     i = 0
 
+
+
     for dictionary in ds: 
         print(dictionary)
 
         df_list.append({"parameters": dictionary ,
-                        "data": run_experiment(n = n,iterations = 30, pop_size = 100, crossover_prob = dictionary["crossover_prob"],
-                                                mutation_prob = dictionary['mutation_prob'], 
+                        "data": run_experiment(n = n,runs=1, pop_size = 200, crossover_prob = dictionary["xo_prob"],
+                                                mutation_prob = dictionary['mut_prob'], 
                                                 selection = dictionary['selection'], 
                                                 mutation = dictionary['mutation'],
-                                                crossover = dictionary['crossover'], gens=50)})
+                                                crossover = dictionary['crossover'], gens=30)})
 
 
-        df_mean_exp.append({"parameters": dictionary ,
-                        "data": df_list[i]["data"].loc[:,['gens','queens', 'deaths', 'best_fitness']].groupby(by=["gens"]).mean()})
+        # df_mean_exp.append({"parameters": dictionary ,
+        #                 "data": df_list[i]["data"].loc[:,['gens','queens', 'deaths', 'best_fitness']].groupby(by=["gens"]).mean()})
 
        # print(tabulate(df_mean_exp[i]["data"], headers='keys', tablefmt='psql'))
 
