@@ -67,7 +67,7 @@ def pmx(p1, p2):
     p1_indexes = sample(range(len(p1)), len(p1))
     p2_indexes = sample(range(len(p2)), len(p2))
 
-    xo_points = sample(range(len(p1_indexes))+1, 2)
+    xo_points = sample(range(len(p1_indexes)+1), 2)
     xo_points.sort()
 
     window_p1 = {}
