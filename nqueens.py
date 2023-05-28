@@ -471,48 +471,133 @@ Individual.get_fitness = get_fitness_regression
 
 
 
-#################################### test for elitism ##############################################################
+########################################################### test for elitism ##############################################################
 
-elitism_exp = elitism_test(crossover=cycle_crossover,mutation=binary_mutation, mutation_prob=0.6, crossover_prob=0.9, selection=tournament_sel, t_size=9) #done for 10x10 chessboard
-elitism_exp_avg = None
-elitism_exp_avg = elitism_exp[1]
-
-
-track_dic_elitism= {}
-elitism = []
-bf_elitism = []
-
-fig, ax = plt.subplots(figsize=(12,7))
-
-for i in range(len(elitism_exp_avg)):
-
-    elitism.append(elitism_exp_avg[i]['elitism'])
-    bf_elitism.append(min(elitism_exp_avg[i]['df'][('best_fitness','mean')]))
-
-    ax.plot(elitism_exp_avg[i]['df'].index, elitism_exp_avg[i]['df'][('best_fitness','mean')], 
-            label = f"{elitism_exp_avg[i]['elitism']}")
-    ax.plot(elitism_exp_avg[i]['df'].index, elitism_exp_avg[i]['df'][('best_fitness','lower_bound')], color='tab:blue', alpha=0.1)
-    ax.plot(elitism_exp_avg[i]['df'].index, elitism_exp_avg[i]['df'][('best_fitness','upper_bound')], color='tab:blue', alpha=0.1)
-    ax.fill_between(elitism_exp_avg[i]['df'].index, elitism_exp_avg[i]['df'][('best_fitness','lower_bound')], elitism_exp_avg[i]['df'][('best_fitness','upper_bound')], alpha=0.2)
-    ax.set_xlabel('Generation',size = 14)
-    ax.set_ylabel('Best Fitness Found', size = 14)
-    ax.spines['top'].set_visible(False)
-    ax.spines['right'].set_visible(False)
-    ax.legend()
-
-track_dic_elitism['elitism'] = elitism
-track_dic_elitism['best_fitness_avg'] = bf_elitism
+# elitism_exp = elitism_test(crossover=cycle_crossover,mutation=binary_mutation, mutation_prob=0.6, crossover_prob=0.9, selection=tournament_sel, t_size=9) #done for 10x10 chessboard
+# elitism_exp_avg = None
+# elitism_exp_avg = elitism_exp[1]
 
 
-f = open("results_elitism.txt", "a")
-f.write("Results for testing elitism or not\n\n")
-f.write(str(track_dic_elitism)+'\n\n')
-track_dic_elitism_df = pd.DataFrame(track_dic_elitism).sort_values(by='best_fitness_avg')
-track_dic_elitism_df.sort_values(by='best_fitness_avg', inplace=True)
-f.write(tabulate(track_dic_elitism_df,tablefmt="github", headers='keys'))
-f.write('\n\n\n')
+# track_dic_elitism= {}
+# elitism = []
+# bf_elitism = []
 
+# fig, ax = plt.subplots(figsize=(12,7))
+
+# for i in range(len(elitism_exp_avg)):
+
+#     elitism.append(elitism_exp_avg[i]['elitism'])
+#     bf_elitism.append(min(elitism_exp_avg[i]['df'][('best_fitness','mean')]))
+
+#     ax.plot(elitism_exp_avg[i]['df'].index, elitism_exp_avg[i]['df'][('best_fitness','mean')], 
+#             label = f"{elitism_exp_avg[i]['elitism']}")
+#     ax.plot(elitism_exp_avg[i]['df'].index, elitism_exp_avg[i]['df'][('best_fitness','lower_bound')], color='tab:blue', alpha=0.1)
+#     ax.plot(elitism_exp_avg[i]['df'].index, elitism_exp_avg[i]['df'][('best_fitness','upper_bound')], color='tab:blue', alpha=0.1)
+#     ax.fill_between(elitism_exp_avg[i]['df'].index, elitism_exp_avg[i]['df'][('best_fitness','lower_bound')], elitism_exp_avg[i]['df'][('best_fitness','upper_bound')], alpha=0.2)
+#     ax.set_xlabel('Generation',size = 14)
+#     ax.set_ylabel('Best Fitness Found', size = 14)
+#     ax.spines['top'].set_visible(False)
+#     ax.spines['right'].set_visible(False)
+#     ax.legend()
+
+# track_dic_elitism['elitism'] = elitism
+# track_dic_elitism['best_fitness_avg'] = bf_elitism
+
+
+# f = open("results_elitism.txt", "a")
+# f.write("Results for testing elitism or not\n\n")
+# f.write(str(track_dic_elitism)+'\n\n')
+# track_dic_elitism_df = pd.DataFrame(track_dic_elitism).sort_values(by='best_fitness_avg')
+# track_dic_elitism_df.sort_values(by='best_fitness_avg', inplace=True)
+# f.write(tabulate(track_dic_elitism_df,tablefmt="github", headers='keys'))
+# f.write('\n\n\n')
+
+# f.close()
+
+# plt.savefig('results_elitism.png')
+# plt.show()
+
+
+
+#################################################### final result #####################################################################
+
+
+
+# final_exp = run_experiment(n=10,
+#                            runs=100, 
+#                            pop_size=200, 
+#                            crossover_prob=0.9, 
+#                            mutation_prob=0.6, 
+#                            selection=tournament_sel, 
+#                            mutation=binary_mutation, 
+#                            crossover=cycle_crossover,
+#                            gens=30,
+#                            t_size=9,
+#                            )
+
+
+# f = open("results_final_indiv.txt", "a")
+# rep = set(tuple(x) for x in final_exp.loc[final_exp['best_fitness'] == -25, 'best_representation'])
+
+# print(rep)
+
+# f.write(str([Individual(representation = i) for i in rep]))
+# # print(rep)
+# print([Individual(representation = list(i)) for i in rep])
+# f.close()
+
+###################################################### n=12 ####################################################
+
+# final_exp = run_experiment(n=12,
+#                            runs=30, 
+#                            pop_size=200, 
+#                            crossover_prob=0.9, 
+#                            mutation_prob=0.6, 
+#                            selection=tournament_sel, 
+#                            mutation=binary_mutation, 
+#                            crossover=cycle_crossover,
+#                            gens=50,
+#                            t_size=9,
+#                            )
+
+
+# f = open("results_final_indiv.txt", "a")
+
+# f.write('\n\n\n n=12')
+# rep = set(tuple(x) for x in final_exp.loc[final_exp['best_fitness'] == -12*2.5, 'best_representation'])
+
+# print(rep)
+
+# f.write(str([Individual(representation = i) for i in rep]))
+# # print(rep)
+# print([Individual(representation = list(i)) for i in rep])
+# f.close()
+
+########################################################### n=20 ##################################################################
+
+final_exp = run_experiment(n=20,
+                           runs=30, 
+                           pop_size=500, 
+                           crossover_prob=0.9, 
+                           mutation_prob=0.6, 
+                           selection=tournament_sel, 
+                           mutation=binary_mutation, 
+                           crossover=cycle_crossover,
+                           gens=80,
+                           t_size=9,
+                           )
+
+
+f = open("results_final_indiv.txt", "a")
+
+f.write('\n\n\n n=20\n\n')
+rep = set(tuple(x) for x in final_exp.loc[final_exp['best_fitness'] == -20*2.5, 'best_representation'])
+
+print(rep)
+
+f.write(str([Individual(representation = i) for i in rep]))
+# print(rep)
+print([Individual(representation = list(i)) for i in rep])
 f.close()
 
-plt.savefig('results_elitism.png')
-plt.show()
+#####################################################################################################################
