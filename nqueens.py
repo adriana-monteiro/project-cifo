@@ -24,11 +24,6 @@ def get_fitness_regression(self):
         fitness *= self.n
     return fitness
 
-def get_fitness_tuple(self):
-
-     return (self.queens, self.deaths)
-
-
 # monkey patching
 Individual.get_fitness = get_fitness_regression
 
