@@ -71,34 +71,53 @@ def cycle_crossover(p1, p2):
 
 
 def k_point_co(p1,p2):
-    # we chose k = 3 
+    """Implementation of k-point crossover.
+
+    Args:
+        p1 (Individual): First parent for crossover.
+        p2 (Individual): Second parent for crossover.
+
+    Returns:
+        Individuals: Two offspring, resulting from the crossover.
+    """
+
+    # Choose de number of crossover points
+    # We choose k=3 because k=1 is single point crossover, k=2 is two point crossover
+    # and more than 3 the offsprings lose the similarity with the parents
     k = 3
 
-    # create offsprings
+    #Initializing empty lists for the offpsrings 
     offspring1 = [None] * len(p1)
     offspring2 = [None] * len(p1)
 
-    # generate k crossover points
+    # Generate k random crossover points
     xo_points = sample(range(1,len(p1)), k)
     xo_points.sort()
 
-    # crossover
+    # The Offspring will have the same values as their parent until the first crossover point
     for i in range(xo_points[0]):
         offspring1[i]=p1[i]
         offspring2[i]=p2[i]
+
+    # Switch allows to alternate between parents
     switch=0
+
+    #Initial loop of the cycle, that loops to every crossover window
     for j in range(1,k):
         if switch==0:
+            # Looping to the crossover window and assigning the values of the other parent
             for i in range(xo_points[j-1],xo_points[j]):
                 offspring1[i]=p2[i]
                 offspring2[i]=p1[i]
             switch=1
+            # Switch to alternate parent in the next crossover point
         else:
             for i in range(xo_points[j-1],xo_points[j]):
                 offspring1[i]=p1[i]
                 offspring2[i]=p2[i]
             switch=0
 
+    #Looping to the remaining empty spots in the offspring and assigning them
     if switch==0:
         for i in range(xo_points[-1],len(p1)):
             offspring1[i]=p2[i]
