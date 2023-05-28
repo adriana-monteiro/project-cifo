@@ -159,6 +159,8 @@ def grid_search(pars, n):
 
     for dictionary in ds: 
         print(dictionary)
+        i+=1
+        print(i,'/', len(ds))
 
         data = run_experiment(n = n,runs=30, pop_size = 200, crossover_prob = dictionary["xo_prob"],
                                                 mutation_prob = dictionary['mut_prob'], 
