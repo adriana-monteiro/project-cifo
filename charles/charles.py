@@ -20,12 +20,16 @@ class Individual:
         else:
             self.representation = representation
 
+        # size of the board (nxn)
         self.n = int(math.sqrt(len(self.representation)))
 
+        # number of queens in the board
         self.queens = self.get_queens()
 
+        # number of dead queens in the board
         self.deaths = self.get_deaths()
 
+        # fitness function (defined in the nqueens document)
         self.fitness = self.get_fitness()
     
         
@@ -89,13 +93,6 @@ class Individual:
     def get_fitness(self):
         raise Exception("You need to monkey patch the fitness path.")
 
-    # def get_neighbours(self, func, **kwargs):
-    #     raise Exception("You need to monkey patch the neighbourhood function.")
-
-    # def queens(self):
-    #     raise Exception("You need to monkey patch the dead_queens path.")
-    
-
     def index(self, value):
         return self.representation.index(value)
 
@@ -141,6 +138,7 @@ class Population:
 
             new_pop = []
 
+            # get elite
             if elitism:
                 if self.optim == "max":
                     elite = deepcopy(max(self.individuals, key=attrgetter("fitness")))
@@ -148,30 +146,39 @@ class Population:
                     elite = deepcopy(min(self.individuals, key=attrgetter("fitness")))
 
             while len(new_pop) < self.size:
-                
+
+                # selection
+
+                # perform tournament while being able to choose tournament size
                 if tournament_size is not None and queens_tournament_size is None and deaths_tournament_size is None:
                     parent1, parent2 = select(self,tournament_size), select(self,tournament_size)
                 
+                # perform double tournament being able to choose tournament size, queens tournament size and deaths tournament size
                 elif tournament_size is not None and queens_tournament_size is not None and deaths_tournament_size is not None:
                     parent1, parent2 = select(self,tournament_size,queens_tournament_size,deaths_tournament_size,switch), select(self,tournament_size,queens_tournament_size,deaths_tournament_size,switch)
 
+                # perform any other selection method that only requires the population
                 else:
                     parent1, parent2 = select(self), select(self)
 
+                # crossover
                 if random() < xo_prob:
                     offspring1, offspring2 = crossover(parent1, parent2)
                 else:
                     offspring1, offspring2 = parent1.representation, parent2.representation
                 
+                # mutation
                 if random() < mut_prob:
                     offspring1 = mutate(offspring1)
                 if random() < mut_prob:
                     offspring2 = mutate(offspring2)
 
+                # fill new population
                 new_pop.append(Individual(representation=offspring1))
                 if len(new_pop) < self.size:
                     new_pop.append(Individual(representation=offspring2))
 
+            # perform elitism
             if elitism:
                 if self.optim == "max":
                     worst = min(new_pop, key=attrgetter("fitness"))
@@ -185,14 +192,21 @@ class Population:
                         new_pop.pop(new_pop.index(worst))
                         new_pop.append(elite)
 
+            # save individuals
             self.individuals = new_pop
 
             if self.optim == "max":
-                print(f'Best Individual: {max(self, key=attrgetter("fitness"))}')
+                #print(f'Best Individual: {max(self, key=attrgetter("fitness"))}')
+
+                # keep the best individual at each generation
+                best_ind.append(deepcopy(max(self.individuals, key=attrgetter("fitness"))))
             elif self.optim == "min":
                 #print(f'Best Individual: {min(self, key=attrgetter("fitness"))}')
+
+                # keep the best individual at each generation
                 best_ind.append(deepcopy(min(self.individuals, key=attrgetter("fitness"))))
-        
+
+        # save all the best individuals
         self.bestindvs = best_ind
     
     def __len__(self):

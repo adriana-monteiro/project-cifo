@@ -7,7 +7,7 @@ import itertools
 
 ############################################# function for running any experiment ###############################################
 
-def run_experiment(n, runs, pop_size, crossover_prob, mutation_prob, selection, mutation, crossover, gens, t_size = None,queens_t_size=None,deaths_t_size=None, switch = None):
+def run_experiment(n, runs, pop_size, crossover_prob, mutation_prob, selection, mutation, crossover, gens, t_size = None,queens_t_size=None,deaths_t_size=None, switch = None, elitism = True):
 
     df = pd.DataFrame()
 
@@ -28,7 +28,7 @@ def run_experiment(n, runs, pop_size, crossover_prob, mutation_prob, selection, 
 
         pop.evolve(gens=gens, xo_prob=crossover_prob, mut_prob=mutation_prob, select=selection,
                  mutate=mutation, crossover=crossover,
-                 elitism=True, tournament_size=t_size, queens_tournament_size=queens_t_size, deaths_tournament_size=deaths_t_size, switch=switch)
+                 elitism=elitism, tournament_size=t_size, queens_tournament_size=queens_t_size, deaths_tournament_size=deaths_t_size, switch=switch)
         
         best_indvs_fit = [i.fitness for i in pop.bestindvs]
         best_indvs_queens = [i.queens for i in pop.bestindvs]
@@ -182,6 +182,33 @@ def grid_search(pars, n):
 
 
         df_final_med.append({'parameters':dictionary, 'df': df_med})
+
+
+    return df_final, df_final_med
+
+
+def elitism_test(crossover, mutation, selection, t_size, mutation_prob, crossover_prob,):
+    df_final = []
+    df_final_med = []
+
+    for elitism_i in [True, False]:
+
+        print('elitism', elitism_i)
+
+        data = run_experiment(elitism=elitism_i, n=10, runs=100, pop_size = 200, crossover_prob = crossover_prob, mutation_prob = mutation_prob, selection=selection, mutation = mutation, crossover = crossover, gens=30, t_size=t_size)
+
+        df_final.append({'elitsm': True, 'data': data})
+    
+        df_med = data.loc[:,['gens','queens', 'deaths', 'best_fitness']].groupby(by=["gens"]).agg({'queens': ['min', 'mean', 'max','std'],'deaths': ['min', 'mean', 'max','std'], 'best_fitness': ['min', 'mean', 'max','std']})
+        df_med[('queens', 'lower_bound')] = df_med[('queens', 'mean')] - (df_med[('queens', 'std')])/2
+        df_med[('queens', 'upper_bound')] = df_med[('queens', 'mean')] + (df_med[('queens', 'std')])/2
+        df_med[('deaths', 'lower_bound')] = df_med[('deaths', 'mean')] - (df_med[('deaths', 'std')])/2
+        df_med[('deaths', 'upper_bound')] = df_med[('deaths', 'mean')] + (df_med[('deaths', 'std')])/2
+        df_med[('best_fitness', 'lower_bound')] = df_med[('best_fitness', 'mean')] - (df_med[('best_fitness', 'std')])/2
+        df_med[('best_fitness', 'upper_bound')] = df_med[('best_fitness', 'mean')] + (df_med[('best_fitness', 'std')])/2
+
+
+        df_final_med.append({'elitism':elitism_i, 'df': df_med})
 
 
     return df_final, df_final_med
