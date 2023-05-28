@@ -2,10 +2,10 @@ from charles.charles import Population, Individual
 from copy import deepcopy
 from charles.selection import tournament_sel, double_tournament, ranking
 from charles.mutation import binary_mutation, swap_mutation, inversion_mutation
-from charles.crossover import single_point_co, k_point_co, cycle_crossover, pmx
+from charles.crossover import single_point_co, k_point_co, cycle_crossover
 from random import random
 from operator import attrgetter
-from testfunctions import run_experiment, tournmanent_experiment, double_tournament_experiment, grid_search
+from testfunctions import run_experiment, tournmanent_experiment, double_tournament_experiment, grid_search, elitism_test
 
 import math
 import matplotlib.pyplot as plt
@@ -14,8 +14,6 @@ import pandas as pd
 import numpy as np
 from tabulate import tabulate
 import matplotlib.patches as mpatches
-
-
 
 
 def get_fitness_regression(self):
@@ -180,8 +178,8 @@ Individual.get_fitness = get_fitness_regression
 
 
 # track_dic_dtourn1['t_size'] = t_sizes_dtourn1
-# track_dic_dtourn1['queens_t_size'] = queens_t_sizes_dtourn1
 # track_dic_dtourn1['deaths_t_size'] = deaths_t_sizes_dtourn1
+# track_dic_dtourn1['queens_t_size'] = queens_t_sizes_dtourn1
 # track_dic_dtourn1['switch'] = switch_dtourn1
 # track_dic_dtourn1['best_fitness_avg'] = bf_dtourn1
 
@@ -235,8 +233,8 @@ Individual.get_fitness = get_fitness_regression
 
 
 # track_dic_dtourn2['t_size'] = t_sizes_dtourn2
-# track_dic_dtourn2['queens_t_size'] = queens_t_sizes_dtourn2
 # track_dic_dtourn2['deaths_t_size'] = deaths_t_sizes_dtourn2
+# track_dic_dtourn2['queens_t_size'] = queens_t_sizes_dtourn2
 # track_dic_dtourn2['switch'] = switch_dtourn2
 # track_dic_dtourn2['best_fitness_avg'] = bf_dtourn2
 
@@ -470,3 +468,51 @@ Individual.get_fitness = get_fitness_regression
 
 # plt.savefig('selection_grid.png')
 # plt.show()
+
+
+
+#################################### test for elitism ##############################################################
+
+elitism_exp = elitism_test(crossover=cycle_crossover,mutation=binary_mutation, mutation_prob=0.6, crossover_prob=0.9, selection=tournament_sel, t_size=9) #done for 10x10 chessboard
+elitism_exp_avg = None
+elitism_exp_avg = elitism_exp[1]
+
+
+track_dic_elitism= {}
+elitism = []
+bf_elitism = []
+
+fig, ax = plt.subplots(figsize=(12,7))
+
+for i in range(len(elitism_exp_avg)):
+
+    elitism.append(elitism_exp_avg[i]['elitism'])
+    bf_elitism.append(min(elitism_exp_avg[i]['df'][('best_fitness','mean')]))
+
+    ax.plot(elitism_exp_avg[i]['df'].index, elitism_exp_avg[i]['df'][('best_fitness','mean')], 
+            label = f"{elitism_exp_avg[i]['elitism']}")
+    ax.plot(elitism_exp_avg[i]['df'].index, elitism_exp_avg[i]['df'][('best_fitness','lower_bound')], color='tab:blue', alpha=0.1)
+    ax.plot(elitism_exp_avg[i]['df'].index, elitism_exp_avg[i]['df'][('best_fitness','upper_bound')], color='tab:blue', alpha=0.1)
+    ax.fill_between(elitism_exp_avg[i]['df'].index, elitism_exp_avg[i]['df'][('best_fitness','lower_bound')], elitism_exp_avg[i]['df'][('best_fitness','upper_bound')], alpha=0.2)
+    ax.set_xlabel('Generation',size = 14)
+    ax.set_ylabel('Best Fitness Found', size = 14)
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+    ax.legend()
+
+track_dic_elitism['elitism'] = elitism
+track_dic_elitism['best_fitness_avg'] = bf_elitism
+
+
+f = open("results_elitism.txt", "a")
+f.write("Results for testing elitism or not\n\n")
+f.write(str(track_dic_elitism)+'\n\n')
+track_dic_elitism_df = pd.DataFrame(track_dic_elitism).sort_values(by='best_fitness_avg')
+track_dic_elitism_df.sort_values(by='best_fitness_avg', inplace=True)
+f.write(tabulate(track_dic_elitism_df,tablefmt="github", headers='keys'))
+f.write('\n\n\n')
+
+f.close()
+
+plt.savefig('results_elitism.png')
+plt.show()

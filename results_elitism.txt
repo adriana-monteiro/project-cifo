@@ -1,0 +1,11 @@
+
+Results for testing elitism or not
+
+{'elitism': [True, False], 'best_fitness_avg': [-21.825, -21.725]}
+
+|    | elitism   |   best_fitness_avg |
+|----|-----------|--------------------|
+|  0 | True      |            -21.825 |
+|  1 | False     |            -21.725 |
+
+

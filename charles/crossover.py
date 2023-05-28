@@ -62,59 +62,66 @@ def cycle_crossover(p1, p2):
     return sorted_offspring1,sorted_offspring2
 
 
-def pmx(p1, p2):
-  
-    p1_indexes = sample(range(len(p1)), len(p1))
-    p2_indexes = sample(range(len(p2)), len(p2))
+# def pmx(p1, p2):
 
-    xo_points = sample(range(len(p1_indexes)+1), 2)
-    xo_points.sort()
+#     # get random sample without replacement of indexes
+#     p1_indexes = sample(range(len(p1)), len(p1))
+#     p2_indexes = sample(range(len(p2)), len(p2))
 
-    window_p1 = {}
-    window_p2 = {}
+#     xo_points = sample(range(len(p1_indexes)+1), 2)
+#     xo_points.sort()
 
-    for i in range(xo_points[0], xo_points[1]):
-       if p2_indexes[i] not in window_p1:
-            window_p1[p1_indexes[i]] = p2_indexes[i]
-       if p1_indexes[i] not in window_p2:
-            window_p2[p2_indexes[i]] = p1_indexes[i]
+#     window_p1 = {}
+#     window_p2 = {}
 
-    def get_off(indexes, parent):
+#     for i in range(xo_points[0], xo_points[1]):
+#        if p2_indexes[i] not in window_p1:
+#             window_p1[p1_indexes[i]] = p2_indexes[i]
+#        if p1_indexes[i] not in window_p2:
+#             window_p2[p2_indexes[i]] = p1_indexes[i]
 
-        ofspr = []
-        ofspr_index = []
+#     def get_off(indexes, parent):
 
-        for index,value in zip(indexes, parent):
+#         ofspr = []
+#         ofspr_index = []
 
-            print(index,value)
+#         for index,value in zip(indexes, parent):
 
-            if index not in window_p1 and index not in window_p2 and index not in ofspr_index:
-                ofspr_index.append(index)
-                ofspr.append(value)
+#             print(index,value)
 
-            elif index in window_p1 and window_p1[index] not in ofspr_index:
-                ofspr_index.append(window_p1[index])
-                ofspr.append(p2[p2_indexes.index(window_p1[index])])
+#             if index not in window_p1 and index not in window_p2 and index not in ofspr_index:
+#                 ofspr_index.append(index)
+#                 ofspr.append(value)
 
-            elif index in window_p2 and window_p2[index] not in ofspr_index:
-                ofspr_index.append(window_p2[index])
-                ofspr.append(p1[p1_indexes.index(window_p2[index])])
+#             elif index in window_p1 and window_p1[index] not in ofspr_index:
+#                 ofspr_index.append(window_p1[index])
+#                 ofspr.append(p2[p2_indexes.index(window_p1[index])])
+
+#             elif index in window_p2 and window_p2[index] not in ofspr_index:
+#                 ofspr_index.append(window_p2[index])
+#                 ofspr.append(p1[p1_indexes.index(window_p2[index])])
         
-        return ofspr
+#         return ofspr
 
-    off1, off2 = get_off(p1_indexes,p1),get_off(p2_indexes, p2)
+#     off1, off2 = get_off(p1_indexes,p1),get_off(p2_indexes, p2)
 
-    return off1,off2
+#     return off1,off2
 
 
 
 def k_point_co(p1,p2):
+    # we chose k = 3 
     k = 3
+
+    # create offsprings
     offspring1 = [None] * len(p1)
     offspring2 = [None] * len(p1)
+
+    # generate k crossover points
     xo_points = sample(range(1,len(p1)), k)
     xo_points.sort()
 
+    # crossover
     for i in range(xo_points[0]):
         offspring1[i]=p1[i]
         offspring2[i]=p2[i]
