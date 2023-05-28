@@ -88,7 +88,7 @@ def tournmanent_experiment(sizes, n, runs, pop_size, crossover_prob, mutation_pr
     return df_final, df_final_med
 
 
-################################## double tournament exp #
+################################## functions for testing double tournament exp ####################################
 
 
 def double_tournament_experiment(pars,n, runs, pop_size, crossover_prob, mutation_prob, mutation, crossover, gens):
@@ -187,6 +187,8 @@ def grid_search(pars, n):
 
     return df_final, df_final_med
 
+
+######################################### function for testing elitism ################################################
 
 def elitism_test(crossover, mutation, selection, t_size, mutation_prob, crossover_prob,):
     df_final = []
