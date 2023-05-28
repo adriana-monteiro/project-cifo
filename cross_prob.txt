@@ -1,0 +1,35 @@
+Crossover probability testing results
+
+{'crossover': ['single_point_co', 'single_point_co', 'single_point_co', 'single_point_co', 'single_point_co', 'single_point_co', 'single_point_co', 'single_point_co', 'single_point_co', 'k_point_co', 'k_point_co', 'k_point_co', 'k_point_co', 'k_point_co', 'k_point_co', 'k_point_co', 'k_point_co', 'k_point_co', 'cycle_crossover', 'cycle_crossover', 'cycle_crossover', 'cycle_crossover', 'cycle_crossover', 'cycle_crossover', 'cycle_crossover', 'cycle_crossover', 'cycle_crossover'], 'xo_prob': [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], 'best_fitness_avg': [239.25, 19.25, 5.333333333333333, -5.75, -14.5, -17.333333333333332, -19.333333333333332, -20.083333333333332, -20.333333333333332, 162.33333333333334, 11.666666666666666, -10.166666666666666, -16.5, -19.666666666666668, -20.5, -21.333333333333332, -21.083333333333332, -20.833333333333332, 187.5, 9.416666666666666, -9.916666666666666, -18.666666666666668, -20.25, -20.416666666666668, -21.333333333333332, -21.583333333333332, -20.75]}
+
+|    | crossover       |   xo_prob |   best_fitness_avg |
+|----|-----------------|-----------|--------------------|
+| 25 | cycle_crossover |       0.8 |          -21.5833  |
+| 24 | cycle_crossover |       0.7 |          -21.3333  |
+| 15 | k_point_co      |       0.7 |          -21.3333  |
+| 16 | k_point_co      |       0.8 |          -21.0833  |
+| 17 | k_point_co      |       0.9 |          -20.8333  |
+| 26 | cycle_crossover |       0.9 |          -20.75    |
+| 14 | k_point_co      |       0.6 |          -20.5     |
+| 23 | cycle_crossover |       0.6 |          -20.4167  |
+|  8 | single_point_co |       0.9 |          -20.3333  |
+| 22 | cycle_crossover |       0.5 |          -20.25    |
+|  7 | single_point_co |       0.8 |          -20.0833  |
+| 13 | k_point_co      |       0.5 |          -19.6667  |
+|  6 | single_point_co |       0.7 |          -19.3333  |
+| 21 | cycle_crossover |       0.4 |          -18.6667  |
+|  5 | single_point_co |       0.6 |          -17.3333  |
+| 12 | k_point_co      |       0.4 |          -16.5     |
+|  4 | single_point_co |       0.5 |          -14.5     |
+| 11 | k_point_co      |       0.3 |          -10.1667  |
+| 20 | cycle_crossover |       0.3 |           -9.91667 |
+|  3 | single_point_co |       0.4 |           -5.75    |
+|  2 | single_point_co |       0.3 |            5.33333 |
+| 19 | cycle_crossover |       0.2 |            9.41667 |
+| 10 | k_point_co      |       0.2 |           11.6667  |
+|  1 | single_point_co |       0.2 |           19.25    |
+|  9 | k_point_co      |       0.1 |          162.333   |
+| 18 | cycle_crossover |       0.1 |          187.5     |
+|  0 | single_point_co |       0.1 |          239.25    |
+
+

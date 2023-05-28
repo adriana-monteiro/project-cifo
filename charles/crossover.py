@@ -1,4 +1,5 @@
 from random import randint, sample, uniform, shuffle
+import math
 
 
 def single_point_co(p1, p2):
@@ -66,7 +67,7 @@ def pmx(p1, p2):
     p1_indexes = sample(range(len(p1)), len(p1))
     p2_indexes = sample(range(len(p2)), len(p2))
 
-    xo_points = sample(range(len(p1_indexes))+1, 2)
+    xo_points = sample(range(len(p1_indexes)+1), 2)
     xo_points.sort()
 
     window_p1 = {}
@@ -107,7 +108,8 @@ def pmx(p1, p2):
 
 
 
-def k_point_co(p1,p2,k):
+def k_point_co(p1,p2):
+    k = 3
     offspring1 = [None] * len(p1)
     offspring2 = [None] * len(p1)
     xo_points = sample(range(1,len(p1)), k)

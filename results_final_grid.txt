@@ -1,0 +1,13 @@
+Final grid search testing results
+
+{'mutation': ['binary_mutation', 'binary_mutation', 'binary_mutation', 'binary_mutation', 'binary_mutation'], 'mut_prob': [0.4, 0.6, 0.6, 0.6, 0.6], 'crossover': ['k_point_co', 'cycle_crossover', 'k_point_co', 'k_point_co', 'cycle_crossover'], 'xo_prob': [0.8, 0.9, 0.8, 0.9, 0.8], 'selection': ['tournament_sel', 'tournament_sel', 'tournament_sel', 'tournament_sel', 'tournament_sel'], 'best_fitness_avg': [-22.0, -22.0, -21.916666666666668, -21.916666666666668, -21.75]}
+
+|    | mutation        |   mut_prob | crossover       |   xo_prob | selection      |   best_fitness_avg |
+|----|-----------------|------------|-----------------|-----------|----------------|--------------------|
+|  0 | binary_mutation |        0.4 | k_point_co      |       0.8 | tournament_sel |           -22      |
+|  1 | binary_mutation |        0.6 | cycle_crossover |       0.9 | tournament_sel |           -22      |
+|  2 | binary_mutation |        0.6 | k_point_co      |       0.8 | tournament_sel |           -21.9167 |
+|  3 | binary_mutation |        0.6 | k_point_co      |       0.9 | tournament_sel |           -21.9167 |
+|  4 | binary_mutation |        0.6 | cycle_crossover |       0.8 | tournament_sel |           -21.75   |
+
+

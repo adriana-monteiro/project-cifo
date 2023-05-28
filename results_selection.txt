@@ -1,0 +1,11 @@
+Results for testing different selection algorithms
+
+{'selection': ['tournament_sel', 'double_tournament', 'ranking'], 'best_fitness_avg': [-22.0, -22.166666666666668, -11.333333333333334]}
+
+|    | selection         |   best_fitness_avg |
+|----|-------------------|--------------------|
+|  1 | double_tournament |           -22.1667 |
+|  0 | tournament_sel    |           -22      |
+|  2 | ranking           |           -11.3333 |
+
+
