@@ -252,6 +252,79 @@ Individual.get_fitness = get_fitness_regression
 # f.close()
 
 
+
+
+################################################ testing for different crossover probabilities ceteris paribus ###########################################################
+
+# grid_parameters_xo = {'mutation': [binary_mutation],
+#                    'mut_prob': [0.2],
+#                    'crossover': [single_point_co, k_point_co, cycle_crossover],
+#                    'xo_prob': [0.1,0.2,0.3,0.4,0.5, 0.6,0.7,0.8,0.9],
+#                    'selection': [tournament_sel]
+#                 }
+
+# #grid_search_xo = grid_search(grid_parameters_xo, 10)[0] #done for 10x10 chessboard
+# grid_search_xo_avg = grid_search(grid_parameters_xo, 10)[1]
+
+# track_dic_xo= {}
+# #mutation_xo = []
+# #mut_prob_xo = []
+# crossover_xo = []
+# co_prob_xo = []
+# #selection_xo = []
+# bf_xo = []
+
+# fig, ax = plt.subplots(figsize=(12,7))
+# colors = {0.1:'blue',0.2:'blue',0.3:'blue',0.4:'green',0.5:'green', 0.6:'green',0.7:'red',0.8:'red',0.9:'red'}
+
+# for i in range(len(grid_search_xo_avg)):
+
+#     #mutation_xo.append(grid_search_xo_avg[i]['parameters']['mutation'].__name__)
+#     #mut_prob_xo.append(grid_search_xo_avg[i]['parameters']['mut_prob'])
+#     crossover_xo.append(grid_search_xo_avg[i]['parameters']['crossover'].__name__)
+#     co_prob_xo.append(grid_search_xo_avg[i]['parameters']['xo_prob'])
+#     #selection_xo.append(grid_search_xo_avg[i]['parameters']['selection'].__name__)
+#     bf_xo.append(min(grid_search_xo_avg[i]['df'][('best_fitness','mean')]))
+#     red_patch = mpatches.Patch(color='red', label='from 0.7 to 0.9', linewidth=.1)
+#     blue_patch = mpatches.Patch(color='blue', label='from 0.1 to 0.3',linewidth=.1)
+#     green_patch = mpatches.Patch(color='green', label='from 0.4 to 0.6',linewidth=.1)
+
+
+
+#     ax.plot(grid_search_xo_avg[i]['df'].index, grid_search_xo_avg[i]['df'][('best_fitness','mean')], color = colors[grid_search_xo_avg[i]['parameters']['xo_prob']])
+#     ax.plot(grid_search_xo_avg[i]['df'].index, grid_search_xo_avg[i]['df'][('best_fitness','lower_bound')], color=colors[grid_search_xo_avg[i]['parameters']['xo_prob']], alpha=0.1)
+#     ax.plot(grid_search_xo_avg[i]['df'].index, grid_search_xo_avg[i]['df'][('best_fitness','upper_bound')], color=colors[grid_search_xo_avg[i]['parameters']['xo_prob']], alpha=0.1)
+#     ax.fill_between(grid_search_xo_avg[i]['df'].index, grid_search_xo_avg[i]['df'][('best_fitness','lower_bound')], grid_search_xo_avg[i]['df'][('best_fitness','upper_bound')], alpha=0.2, color=colors[grid_search_xo_avg[i]['parameters']['xo_prob']])
+#     ax.set_xlabel('Generation',size = 14)
+#     ax.set_ylabel('Best Fitness Found', size = 14)
+#     ax.spines['top'].set_visible(False)
+#     ax.spines['right'].set_visible(False)
+#     ax.legend(handles=[ blue_patch, green_patch, red_patch], title = 'probability')
+
+
+# # track_dic_xo['mutation'] = mutation_xo
+# # track_dic_xo['mut_prob'] = mut_prob_xo
+# track_dic_xo['crossover'] = crossover_xo
+# track_dic_xo['xo_prob'] = co_prob_xo
+# # track_dic_xo['selection'] = selection_xo
+# track_dic_xo['best_fitness_avg'] = bf_xo
+
+
+# f = open("cross_prob.txt", "a")
+# f.write("Crossover probability testing results\n\n")
+# f.write(str(track_dic_xo)+'\n\n')
+# track_dic_xo_df = pd.DataFrame(track_dic_xo).sort_values(by='best_fitness_avg')
+# track_dic_xo_df.sort_values(by='best_fitness_avg', inplace=True)
+# f.write(tabulate(track_dic_xo_df,tablefmt="github", headers='keys'))
+# f.write('\n\n\n')
+
+# f.close()
+
+# plt.savefig('xo_proba_test.png')
+# plt.show()
+
+
+
 ########################################### grid search for the best crossover and mutation #######################################################
 
 # grid_parameters = {'mutation': [binary_mutation, swap_mutation, inversion_mutation],
@@ -347,53 +420,53 @@ Individual.get_fitness = get_fitness_regression
 
 ######################################## find out if other selection algorithms work best ! ##############################################
 
-selection_parameters = {'mutation': [binary_mutation,],
-                   'mut_prob': [0.6],
-                   'crossover': [cycle_crossover],
-                   'xo_prob': [0.9],
-                   'selection': [tournament_sel, double_tournament, ranking]
-                }
+# selection_parameters = {'mutation': [binary_mutation,],
+#                    'mut_prob': [0.6],
+#                    'crossover': [cycle_crossover],
+#                    'xo_prob': [0.9],
+#                    'selection': [tournament_sel, double_tournament, ranking]
+#                 }
 
-sel_search_exp = grid_search(selection_parameters, 10) #done for 10x10 chessboard
-sel_search_exp_avg = sel_search_exp[1]
-
-
-track_dic_sel= {}
-
-selection_sel = []
-bf_sel = []
-
-fig, ax = plt.subplots(figsize=(12,7))
-
-for i in range(len(sel_search_exp_avg)):
-
-    selection_sel.append(sel_search_exp_avg[i]['parameters']['selection'].__name__)
-    bf_sel.append(min(sel_search_exp_avg[i]['df'][('best_fitness','mean')]))
-
-    ax.plot(sel_search_exp_avg[i]['df'].index, sel_search_exp_avg[i]['df'][('best_fitness','mean')], 
-            label = f"{sel_search_exp_avg[i]['parameters']['selection'].__name__}")
-    ax.plot(sel_search_exp_avg[i]['df'].index, sel_search_exp_avg[i]['df'][('best_fitness','lower_bound')], color='tab:blue', alpha=0.1)
-    ax.plot(sel_search_exp_avg[i]['df'].index, sel_search_exp_avg[i]['df'][('best_fitness','upper_bound')], color='tab:blue', alpha=0.1)
-    ax.fill_between(sel_search_exp_avg[i]['df'].index, sel_search_exp_avg[i]['df'][('best_fitness','lower_bound')], sel_search_exp_avg[i]['df'][('best_fitness','upper_bound')], alpha=0.2)
-    ax.set_xlabel('Generation',size = 14)
-    ax.set_ylabel('Best Fitness Found', size = 14)
-    ax.spines['top'].set_visible(False)
-    ax.spines['right'].set_visible(False)
-    ax.legend()
-
-track_dic_sel['selection'] = selection_sel
-track_dic_sel['best_fitness_avg'] = bf_sel
+# sel_search_exp = grid_search(selection_parameters, 10) #done for 10x10 chessboard
+# sel_search_exp_avg = sel_search_exp[1]
 
 
-f = open("results_selection.txt", "a")
-f.write("Results for testing different selection algorithms\n\n")
-f.write(str(track_dic_sel)+'\n\n')
-track_dic_grid_df = pd.DataFrame(track_dic_sel).sort_values(by='best_fitness_avg')
-track_dic_grid_df.sort_values(by='best_fitness_avg', inplace=True)
-f.write(tabulate(track_dic_grid_df,tablefmt="github", headers='keys'))
-f.write('\n\n\n')
+# track_dic_sel= {}
 
-f.close()
+# selection_sel = []
+# bf_sel = []
 
-plt.savefig('selection_grid.png')
-plt.show()
+# fig, ax = plt.subplots(figsize=(12,7))
+
+# for i in range(len(sel_search_exp_avg)):
+
+#     selection_sel.append(sel_search_exp_avg[i]['parameters']['selection'].__name__)
+#     bf_sel.append(min(sel_search_exp_avg[i]['df'][('best_fitness','mean')]))
+
+#     ax.plot(sel_search_exp_avg[i]['df'].index, sel_search_exp_avg[i]['df'][('best_fitness','mean')], 
+#             label = f"{sel_search_exp_avg[i]['parameters']['selection'].__name__}")
+#     ax.plot(sel_search_exp_avg[i]['df'].index, sel_search_exp_avg[i]['df'][('best_fitness','lower_bound')], color='tab:blue', alpha=0.1)
+#     ax.plot(sel_search_exp_avg[i]['df'].index, sel_search_exp_avg[i]['df'][('best_fitness','upper_bound')], color='tab:blue', alpha=0.1)
+#     ax.fill_between(sel_search_exp_avg[i]['df'].index, sel_search_exp_avg[i]['df'][('best_fitness','lower_bound')], sel_search_exp_avg[i]['df'][('best_fitness','upper_bound')], alpha=0.2)
+#     ax.set_xlabel('Generation',size = 14)
+#     ax.set_ylabel('Best Fitness Found', size = 14)
+#     ax.spines['top'].set_visible(False)
+#     ax.spines['right'].set_visible(False)
+#     ax.legend()
+
+# track_dic_sel['selection'] = selection_sel
+# track_dic_sel['best_fitness_avg'] = bf_sel
+
+
+# f = open("results_selection.txt", "a")
+# f.write("Results for testing different selection algorithms\n\n")
+# f.write(str(track_dic_sel)+'\n\n')
+# track_dic_grid_df = pd.DataFrame(track_dic_sel).sort_values(by='best_fitness_avg')
+# track_dic_grid_df.sort_values(by='best_fitness_avg', inplace=True)
+# f.write(tabulate(track_dic_grid_df,tablefmt="github", headers='keys'))
+# f.write('\n\n\n')
+
+# f.close()
+
+# plt.savefig('selection_grid.png')
+# plt.show()
