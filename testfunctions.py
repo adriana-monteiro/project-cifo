@@ -1,7 +1,7 @@
 import pandas as pd
 from charles.charles import Population
 from charles.selection import tournament_sel, double_tournament
-
+from copy import deepcopy
 import itertools
 
 
@@ -30,10 +30,11 @@ def run_experiment(n, runs, pop_size, crossover_prob, mutation_prob, selection, 
                  mutate=mutation, crossover=crossover,
                  elitism=elitism, tournament_size=t_size, queens_tournament_size=queens_t_size, deaths_tournament_size=deaths_t_size, switch=switch)
         
-        best_indvs_fit = [i.fitness for i in pop.bestindvs]
-        best_indvs_queens = [i.queens for i in pop.bestindvs]
-        best_indvs_deaths = [i.deaths for i in pop.bestindvs]
-        best_indvs_rep = [i.representation for i in pop.bestindvs]
+        best_indvs = deepcopy(pop.bestindvs)
+        best_indvs_fit = [i.fitness for i in best_indvs]
+        best_indvs_queens = [i.queens for i in best_indvs]
+        best_indvs_deaths = [i.deaths for i in best_indvs]
+        best_indvs_rep = [i.representation for i in best_indvs]
 
 
         df_temp['run'] = [run+1]*gens
