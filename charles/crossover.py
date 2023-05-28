@@ -22,11 +22,13 @@ def single_point_co(p1, p2):
 
 def cycle_crossover(p1, p2):
 
+    #Initializing empty lists for the offpsrings placeholders and their indexes
     offspring1 = [None] * len(p1)
     offspring2 = [None] * len(p2)
     offspring1_indexes = [None] * len(p1)
     offspring2_indexes = [None] * len(p2)
-
+    
+    #Getting the indexes out of the parents and shuffling them for a random initiation
     p1_indexes = list(range(len(p1)))
     p2_indexes = list(range(len(p2)))
     shuffle(p1_indexes)
@@ -39,14 +41,18 @@ def cycle_crossover(p1, p2):
         val1 = p1_indexes[index]
         val2 = p2_indexes[index]
 
+    #Initial loop of the cycle, that repeats until it gets to a repeated index already in the offspring
         while val1 != val2:
+            #We save the indexes of the values added, to later reorder
             offspring1_indexes[index] = p1_indexes[index]
+            #Adding the value from the parent to the offspring
             offspring1[index] = p1[p1_indexes[index]]
             offspring2_indexes[index] = p2_indexes[index]
             offspring2[index] = p2[p2_indexes[index]]
             val2 = p2_indexes[index]
             index = p1_indexes.index(val2)
-
+    #After the first loop stops, we add the values of the second parent to the empty spots in the offspring
+    #We save the indexes and add right the way the corresponding values to the offspring from the second parent
         for element in offspring1:
             if element is None:
                 index = offspring1.index(None)
@@ -56,6 +62,7 @@ def cycle_crossover(p1, p2):
                     offspring2_indexes[index] = p1_indexes[index]
                     offspring2[index] = p1[p1_indexes[index]]
     
+    #Reordering of the offsprings with the before saved indexes
     sorted_offspring1 = [offspring1 for _, offspring1 in sorted(zip(offspring1_indexes,offspring1))]
     sorted_offspring2 = [offspring2 for _, offspring2 in sorted(zip(offspring2_indexes,offspring2))]
 
