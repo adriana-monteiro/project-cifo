@@ -45,3 +45,8 @@ def inversion_mutation(individual):
     individual[mut_indexes[0]:mut_indexes[1]] = individual[mut_indexes[0]:mut_indexes[1]][::-1]
 
     return individual
+
+
+ahhaofhaefhboih 
+da
+dad
